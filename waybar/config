@@ -56,29 +56,31 @@
     },
 
     "cpu": {
-        "format": " {usage}%",
-        "tooltip": false
+        "format": "  {usage}%",
+        "tooltip": false,
+        "on-click": "hyprctl dispatch exec 'kitty -e btop'"
     },
 
     "memory": {
-        "format": " {percentage}%"
+        "format": "  {}%",
+        "on-click": "hyprctl dispatch exec 'kitty -e btop'"
     },
 
     "pulseaudio": {
-        "format": "{icon} {volume}%",
-        "format-muted": "󰝟 Muted",
+        "format": "{icon}  {volume}%",
+        "format-muted": "󰅶  Muted",
         "format-icons": {
-            "default": ["󰕿", "󰖀", "󰕾"]
+            "headphone": "",
+            "default": ["", "", ""]
         },
-        "on-click": "pavucontrol"
+        "on-click": "hyprctl dispatch exec pavucontrol" 
     },
 
     "network": {
-        "format-wifi": "  {essid}",
-        "format-ethernet": "󰈀 Wired",
-        "format-disconnected": "󰖪 Disconnected",
-        "tooltip-format": "{ifname} via {gwaddr}",
-        "on-click": "kitty --class nm-connection-editor nmtui"
+        "format-wifi": "   {signalStrength}%",
+        "format-ethernet": "󰊗  Connected",
+        "format-disconnected": "⚠  Disconnected",
+        "on-click": "hyprctl dispatch exec nm-connection-editor"
     },
 
     "battery": {
@@ -86,17 +88,17 @@
             "warning": 30,
             "critical": 15
         },
-        "format": "{icon} {capacity}%",
-        "format-charging": " {capacity}%",
-        "format-plugged": " {capacity}%",
-        "format-alt": "{icon} {time}",
-        "format-icons": ["", "", "", "", ""]
+        "format": "{icon}  {capacity}%",
+        "format-charging": "󰃨  {capacity}%",
+        "format-plugged": "  {capacity}%",
+        "format-icons": ["", "", "", "", ""],
+        "on-click": "hyprctl dispatch exec xfce4-power-manager-settings"
     },
 
     "clock": {
-        "format": " {:%H:%M}",
-        "format-alt": " {:%A, %B %d, %Y}",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+        "locale": "en_US.UTF-8",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "format": "  {:%I:%M %p  |  %A, %b %d}"
     },
 
     "tray": {
@@ -119,8 +121,8 @@
         "return-type": "json",
         "exec-if": "which swaync-client",
         "exec": "swaync-client -swb",
-        "on-click": "sleep 0.1 && swaync-client -t -sw",
-        "on-click-right": "sleep 0.1 && swaync-client -d -sw",
+        "on-click": "hyprctl dispatch exec 'swaync-client -t -sw'",
+        "on-click-right": "hyprctl dispatch exec 'swaync-client -d -sw'",
         "escape": true
     },
 
