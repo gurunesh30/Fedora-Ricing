@@ -5,23 +5,42 @@
     "spacing": 4,
 
     "modules-left": [
-        "hyprland/workspaces",
-        "hyprland/submap",
-        "custom/sysinfo"
-    ],
+
+    "custom/launcher",
+
+    "hyprland/workspaces",
+
+    "hyprland/submap",
+
+    "custom/sysinfo"
+],
     "modules-center": [
         "hyprland/window"
     ],
     "modules-right": [
-        "cpu",
-        "memory",
-        "pulseaudio",
-        "battery",
-        "network",
-        "clock",
-        "tray",
-        "custom/notification"
-    ],
+
+    "cpu",
+
+    "memory",
+
+    "custom/gpu",
+
+    "custom/fan",
+
+    "pulseaudio",
+
+    "battery",
+
+    "network",
+
+    "clock",
+
+    "tray",
+
+    "custom/notification",
+
+    "custom/power"
+],
 
     "hyprland/workspaces": {
         "disable-scroll": true,
@@ -56,54 +75,79 @@
     },
 
     "cpu": {
-        "format": "  {usage}%",
-        "tooltip": false,
-        "on-click": "hyprctl dispatch exec 'kitty -e btop'"
-    },
+    "format": "  {usage}%",
+    "tooltip": true,
+    "interval": 2,
+    "on-click": "hyprctl dispatch exec '[float] kitty -e btop'",
+    "on-click-right": "notify-send 'CPU' \"$(grep 'model name' /proc/cpuinfo | head -1 | cut -d':' -f2)\""
+},
 
     "memory": {
-        "format": "  {}%",
-        "on-click": "hyprctl dispatch exec 'kitty -e btop'"
-    },
+    "format": "  {}%",
+    "on-click": "hyprctl dispatch exec 'kitty -e btop'"
+},
 
     "pulseaudio": {
-        "format": "{icon}  {volume}%",
-        "format-muted": "󰅶  Muted",
-        "format-icons": {
-            "headphone": "",
-            "default": ["", "", ""]
-        },
-        "on-click": "hyprctl dispatch exec pavucontrol" 
+    "format": "{icon}  {volume}%",
+    "format-muted": "󰖁 Muted",
+    "scroll-step": 2,
+    "on-click": "pavucontrol",
+    "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+",
+    "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-"
     },
-
     "network": {
-        "format-wifi": "   {signalStrength}%",
-        "format-ethernet": "󰊗  Connected",
-        "format-disconnected": "⚠  Disconnected",
-        "on-click": "hyprctl dispatch exec nm-connection-editor"
-    },
+    "format-wifi": "󰖩 {signalStrength}%",
+    "format-ethernet": "󰈀 Connected",
+    "format-disconnected": "󰖪 Offline",
+
+    "tooltip-format": "{essid}\n{ipaddr}",
+
+    "on-click": "nm-connection-editor",
+
+    "on-click-right": "nm-connection-editor"
+},
 
     "battery": {
-        "states": {
-            "warning": 30,
-            "critical": 15
-        },
-        "format": "{icon}  {capacity}%",
-        "format-charging": "󰃨  {capacity}%",
-        "format-plugged": "  {capacity}%",
-        "format-icons": ["", "", "", "", ""],
-        "on-click": "hyprctl dispatch exec xfce4-power-manager-settings"
+
+    "states": {
+        "warning": 30,
+        "critical": 15
     },
+
+    "format": "{icon} {capacity}%",
+
+    "format-charging": "󰂄 {capacity}%",
+
+    "format-icons": [
+        "󰁺",
+        "󰁻",
+        "󰁼",
+        "󰁽",
+        "󰁾"
+    ],
+
+    "on-click": "xfce4-power-manager-settings",
+
+    "on-click-right": "notify-send Battery \"$(upower -i $(upower -e | grep BAT) | grep time)\""
+},
 
     "clock": {
-        "locale": "en_US.UTF-8",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format": "  {:%I:%M %p  |  %A, %b %d}"
-    },
 
+    "locale":"en_US.UTF-8",
+
+    "format":" {:%I:%M %p}",
+
+    "tooltip-format":"<big>{:%A, %d %B %Y}</big>\n<tt>{calendar}</tt>",
+
+    "on-click":"gnome-calendar",
+
+    "on-click-right":"notify-send \"$(date)\""
+},
     "tray": {
-        "spacing": 10
-    },
+    "spacing": 10,
+    "icon-size": 18
+},
 
     "custom/notification": {
         "tooltip": false,
@@ -127,9 +171,57 @@
     },
 
     "custom/sysinfo": {
-        "exec": "~/.config/waybar/sys_info.sh",
-        "return-type": "json",
-        "interval": 2,
-        "tooltip": true
-    }
+
+    "exec":"~/.config/waybar/sys_info.sh",
+
+    "return-type":"json",
+
+    "interval":2,
+
+    "tooltip":true,
+
+    "on-click":"kitty -e btop",
+
+    "on-click-right":"kitty -e fastfetch"
+},
+
+"custom/gpu": {
+
+    "exec":"~/.config/waybar/gpu_info.sh",
+
+    "return-type":"json",
+
+    "interval":2,
+
+    "tooltip":true,
+
+    "on-click":"nvidia-settings",
+
+    "on-click-right":"~/.config/waybar/gpu_notify.sh"
+},
+
+"custom/fan": {
+
+    "exec":"~/.config/waybar/fan_control.sh",
+
+    "return-type":"json",
+
+    "interval":2,
+
+    "tooltip":true,
+
+    "on-click":"~/.config/waybar/fan_notify.sh",
+
+    "on-click-right":"~/.config/waybar/msi_fan_mode.sh"
+},
+"custom/power": {
+    "format": "",
+    "tooltip": false,
+    "on-click": "~/.config/rofi/powermenu.sh"
+},
+"custom/launcher": {
+    "format": "",
+    "tooltip": false,
+    "on-click": "walker"
+}
 }

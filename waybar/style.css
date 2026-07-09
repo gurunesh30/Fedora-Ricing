@@ -45,12 +45,24 @@ window#waybar.hidden {
     border-bottom: 3px solid #eb6f92;
 }
 
-#mode, #clock, #cpu, #memory, #pulseaudio, #battery, #network, #tray, #custom-notification, #custom-sysinfo {
+#mode, #clock, #cpu, #memory, #pulseaudio, #battery, #network, #tray, #custom-notification, #custom-sysinfo, #custom-gpu, #custom-fan {
     padding: 0 14px;
     margin: 5px 3px;
     border-radius: 8px;
     background-color: rgba(42, 39, 63, 0.7); /* surface with opacity */
     color: #e0def4;
+}
+
+#custom-sysinfo {
+    color: #9ccfd8; /* foam */
+}
+
+#custom-sysinfo.mid {
+    color: #f6c177; /* gold */
+}
+
+#custom-sysinfo.high {
+    color: #eb6f92; /* love */
 }
 
 #clock {
@@ -72,6 +84,26 @@ window#waybar.hidden {
 
 #network {
     color: #c4a7e7; /* iris */
+}
+
+#custom-gpu {
+    color: #c4a7e7; /* iris */
+}
+
+#custom-gpu.high {
+    color: #eb6f92; /* love - high GPU usage */
+}
+
+#custom-gpu.mid {
+    color: #f6c177; /* gold - medium GPU usage */
+}
+
+#custom-gpu.low {
+    color: #9ccfd8; /* foam - low GPU usage */
+}
+
+#custom-fan {
+    color: #ea9a97; /* rose */
 }
 
 #custom-notification {
