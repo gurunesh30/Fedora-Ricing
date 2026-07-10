@@ -4,7 +4,7 @@
     border: none;
     border-radius: 0;
     font-family: "JetBrains Mono Nerd Font", monospace;
-    font-size: 13px;
+    font-size: 11px;
     min-height: 0;
 }
 
@@ -21,7 +21,7 @@ window#waybar.hidden {
 }
 
 #workspaces button {
-    padding: 0 10px;
+    padding: 0 6px;
     color: #6e6a86; /* muted */
     background-color: transparent;
     border-bottom: 3px solid transparent;
@@ -45,10 +45,16 @@ window#waybar.hidden {
     border-bottom: 3px solid #eb6f92;
 }
 
-#mode, #clock, #cpu, #memory, #pulseaudio, #battery, #network, #tray, #custom-notification, #custom-sysinfo, #custom-gpu, #custom-fan {
-    padding: 0 14px;
-    margin: 5px 3px;
-    border-radius: 8px;
+#window {
+    font-weight: bold;
+    color: #e0def4;
+    padding: 0 4px;
+}
+
+#mode, #clock, #cpu, #memory, #pulseaudio, #battery, #network, #tray, #custom-notification, #custom-sysinfo, #custom-gpu, #custom-fan, #custom-cava {
+    padding: 0 8px;
+    margin: 4px 2px;
+    border-radius: 6px;
     background-color: rgba(42, 39, 63, 0.7); /* surface with opacity */
     color: #e0def4;
 }
@@ -106,19 +112,20 @@ window#waybar.hidden {
     color: #ea9a97; /* rose */
 }
 
+#custom-cava {
+    color: #c4a7e7; /* iris */
+    font-family: "JetBrains Mono Nerd Font", monospace;
+    font-size: 12px;
+    letter-spacing: -2px;
+}
+
 #custom-notification {
     color: #eb6f92; /* love */
-    font-size: 14px;
+    font-size: 12px;
 }
 
 #tray {
     background-color: rgba(57, 53, 82, 0.7); /* overlay */
-}
-
-#window {
-    font-weight: bold;
-    color: #e0def4;
-    padding: 0 10px;
 }
 
 #battery {

@@ -1,8 +1,8 @@
 {
     "layer": "top",
     "position": "top",
-    "height": 38,
-    "spacing": 4,
+    "height": 30,
+    "spacing": 2,
 
     "modules-left": [
 
@@ -12,11 +12,12 @@
 
     "hyprland/submap",
 
-    "custom/sysinfo"
+    "custom/sysinfo",
+
+    "hyprland/window"
 ],
-    "modules-center": [
-        "hyprland/window"
-    ],
+    "modules-center": [],
+
     "modules-right": [
 
     "cpu",
@@ -27,8 +28,9 @@
 
     "custom/fan",
 
-    "pulseaudio",
+    "custom/cava",
 
+    "pulseaudio",
     "battery",
 
     "network",
@@ -49,11 +51,32 @@
         "format": "{icon}",
         "format-icons": {
             "1": "󰈹",
-            "2": "",
-            "3": "󰚩",
-            "4": "",
-            "5": "",
-            "default": ""
+            "2": "󰨞",
+            "3": "",
+            "4": "",
+            "5": "",
+            "urgent": "",
+            "default": "",
+            "org.mozilla.firefox": "󰈹",
+            "firefox": "󰈹",
+            "brave-browser": "",
+            "google-chrome": "",
+            "chromium": "",
+            "code": "󰨞",
+            "Code": "󰨞",
+            "Alacritty": "",
+            "kitty": "",
+            "spotify": "",
+            "discord": "󰙯",
+            "TelegramDesktop": "",
+            "obsidian": "󰠮",
+            "steam": "",
+            "org.gnome.Nautilus": "󰉋",
+            "thunar": "󰉋",
+            "pavucontrol": "󰕾",
+            "btop": "",
+            "org.gnome.Settings": "󰒓",
+            "nm-connection-editor": "󱛇"
         },
         "persistent-workspaces": {
             "1": [],
@@ -70,7 +93,8 @@
 
     "hyprland/window": {
         "format": "{}",
-        "max-length": 50,
+        "max-length": 20,
+        "truncate": "end",
         "separate-outputs": true
     },
 
@@ -172,7 +196,7 @@
 
     "custom/sysinfo": {
 
-    "exec":"~/.config/waybar/sys_info.sh",
+    "exec":"~/.config/hypr/waybar/sys_info.sh",
 
     "return-type":"json",
 
@@ -187,7 +211,7 @@
 
 "custom/gpu": {
 
-    "exec":"~/.config/waybar/gpu_info.sh",
+    "exec":"~/.config/hypr/waybar/gpu_info.sh",
 
     "return-type":"json",
 
@@ -197,12 +221,12 @@
 
     "on-click":"nvidia-settings",
 
-    "on-click-right":"~/.config/waybar/gpu_notify.sh"
+    "on-click-right":"~/.config/hypr/waybar/gpu_notify.sh"
 },
 
 "custom/fan": {
 
-    "exec":"~/.config/waybar/fan_control.sh",
+    "exec":"~/.config/hypr/waybar/fan_control.sh",
 
     "return-type":"json",
 
@@ -210,9 +234,16 @@
 
     "tooltip":true,
 
-    "on-click":"~/.config/waybar/fan_notify.sh",
+    "on-click":"~/.config/hypr/waybar/fan_notify.sh",
 
-    "on-click-right":"~/.config/waybar/msi_fan_mode.sh"
+    "on-click-right":"~/.config/hypr/waybar/msi_fan_mode.sh"
+},
+"custom/cava": {
+    "exec": "/home/arthurmorgan/.config/hypr/waybar/cava-waybar.sh",
+    "return-type": "json",
+    "interval": 0,
+    "tooltip": true,
+    "on-click": "pavucontrol"
 },
 "custom/power": {
     "format": "",
