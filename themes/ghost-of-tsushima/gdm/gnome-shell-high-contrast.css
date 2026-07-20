@@ -1,0 +1,325 @@
+/* ═══════════════════════════════════════════════════════════════
+   Ghost of Tsushima - GNOME Shell High Contrast Theme
+   Accessibility-focused with Ghost of Tsushima accent palette
+   ═══════════════════════════════════════════════════════════════ */
+
+@keyframes ghostFadeInUp {
+  from { opacity: 0; translation: 0 30px; }
+  to   { opacity: 1; translation: 0 0; }
+}
+
+@keyframes ghostFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes ghostClockGlow {
+  0%   { text-shadow: 0 0 8px rgba(255, 255, 255, 0.3); }
+  50%  { text-shadow: 0 0 16px rgba(255, 255, 255, 0.6); }
+  100% { text-shadow: 0 0 8px rgba(255, 255, 255, 0.3); }
+}
+
+@keyframes ghostFocusGlow {
+  0%   { box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5); }
+  50%  { box-shadow: 0 0 12px 3px rgba(255, 255, 255, 0.7); }
+  100% { box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5); }
+}
+
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item,
+.login-dialog .login-dialog-auth-list-item,
+.login-dialog-not-listed-button {
+  color: #ffffff;
+  background-color: #000000;
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+  transition-duration: 200ms;
+}
+
+.icon-button:focus,
+.login-dialog-button.a11y-button:focus,
+.login-dialog-button.cancel-button:focus,
+.login-dialog-button.switch-user-button:focus,
+.login-dialog-button.login-dialog-session-list-button:focus {
+  box-shadow: inset 0 0 0 3px #ffffff !important;
+  background-color: #333333;
+}
+
+.icon-button:hover,
+.login-dialog-button.a11y-button:hover,
+.login-dialog-button.cancel-button:hover,
+.login-dialog-button.switch-user-button:hover,
+.login-dialog-button.login-dialog-session-list-button:hover {
+  background-color: #333333;
+  border-color: #ffffff;
+}
+
+.icon-button:selected,
+.login-dialog-button.a11y-button:selected,
+.login-dialog-button.cancel-button:selected,
+.login-dialog-button.switch-user-button:selected,
+.login-dialog-button.login-dialog-session-list-button:selected,
+.button:selected {
+  color: #000000;
+  background-color: #ffffff;
+  box-shadow: inset 0 0 0 3px #ffffff;
+}
+
+.icon-button:active,
+.login-dialog-button.a11y-button:active,
+.login-dialog-button.cancel-button:active,
+.login-dialog-button.switch-user-button:active,
+.login-dialog-button.login-dialog-session-list-button:active {
+  background-color: #444444;
+}
+
+.calendar {
+  background-color: #000000;
+  border-radius: 16px;
+  padding: 12px;
+  border: 2px solid #ffffff;
+}
+
+.calendar-month-header .calendar-month-label {
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.calendar-day-heading {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.calendar-day {
+  color: #ffffff;
+}
+
+.calendar-day-today {
+  background-color: #ffffff;
+  color: #000000;
+  font-weight: bold;
+}
+
+.panel-button {
+  color: #ffffff;
+  border-radius: 999px;
+  padding: 0 8px;
+}
+
+.panel-button:hover {
+  background-color: #333333;
+}
+
+.panel-button:checked {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.dash-background {
+  background-color: #000000;
+  border: 2px solid #ffffff;
+  border-radius: 16px;
+}
+
+.dash-separator {
+  background-color: #ffffff;
+  width: 1px;
+  height: 24px;
+  margin: 0 4px;
+}
+
+.search-entry {
+  background-color: #000000;
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+  color: #ffffff;
+  padding: 8px 16px;
+}
+
+.search-entry:focus {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
+}
+
+.message {
+  background-color: #000000;
+  border-radius: 16px;
+  border: 2px solid #ffffff;
+  color: #ffffff;
+}
+
+.osd-window {
+  background-color: #000000;
+  border: 2px solid #ffffff;
+  border-radius: 16px;
+  color: #ffffff;
+}
+
+.workspace-thumbnail {
+  background-color: #000000;
+  border: 3px solid #ffffff;
+  border-radius: 8px;
+}
+
+.workspace-thumbnail:active {
+  border-width: 4px;
+}
+
+.modal-dialog {
+  background-color: #000000;
+  border: 2px solid #ffffff;
+  border-radius: 16px;
+  color: #ffffff;
+}
+
+/* ── Login / Lock Screen ───────────────────────────────────── */
+
+.unlock-dialog {
+  background-color: transparent;
+  animation: ghostFadeIn 1s ease-out;
+}
+
+.screen-shield-background {
+  background: #000000;
+}
+
+#lockDialogGroup {
+  background: url("background.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.unlock-dialog-clock {
+  color: #ffffff;
+  spacing: 2em;
+  animation: ghostFadeInUp 0.8s ease-out;
+}
+
+.unlock-dialog-clock .unlock-dialog-clock-time {
+  font-size: 6.546em;
+  font-weight: 800;
+  animation: ghostClockGlow 4s ease-in-out infinite;
+}
+
+.unlock-dialog-clock .unlock-dialog-clock-date {
+  font-weight: 400;
+  font-size: 1.818em;
+}
+
+.unlock-dialog-clock .unlock-dialog-clock-hint {
+  margin-top: 2em;
+  padding: 6px 18px;
+  border-radius: 16px;
+  font-weight: bold;
+  background-color: #333333;
+  border: 2px solid #ffffff;
+  color: #ffffff;
+}
+
+.login-dialog,
+.unlock-dialog {
+  color: #ffffff;
+  animation: ghostFadeInUp 0.6s ease-out;
+}
+
+.login-dialog .login-dialog-prompt-layout,
+.unlock-dialog .login-dialog-prompt-layout {
+  width: 25em;
+  spacing: 9px;
+}
+
+.login-dialog-logo-bin {
+  margin: 3em 0;
+  animation: ghostFadeIn 1.2s ease-out;
+}
+
+.login-dialog-not-listed-button {
+  color: #ffffff;
+  background-color: #000000;
+  padding: 0 6px;
+  margin: 6px;
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+}
+
+.login-dialog-not-listed-button:focus {
+  box-shadow: inset 0 0 0 3px #ffffff !important;
+  background-color: #333333;
+}
+
+.login-dialog-not-listed-button:hover {
+  background-color: #333333;
+}
+
+.login-dialog .login-dialog-auth-list-item {
+  color: #ffffff;
+  background-color: #000000;
+  border-radius: 9.6px;
+  padding: 7.2px;
+  border: 2px solid #ffffff;
+}
+
+.login-dialog .login-dialog-auth-list-item:selected,
+.login-dialog .login-dialog-auth-list-item:focus {
+  color: #000000;
+  box-shadow: inset 0 0 0 3px #ffffff !important;
+  background-color: #ffffff;
+}
+
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item {
+  color: #ffffff;
+  background-color: #000000;
+  border-radius: 16px;
+  padding: 9px;
+  border: 2px solid #ffffff;
+}
+
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item:selected,
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item:focus {
+  color: #000000;
+  box-shadow: inset 0 0 0 3px #ffffff !important;
+  background-color: #ffffff;
+}
+
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item:hover {
+  background-color: #333333;
+}
+
+.login-dialog .user-widget .user-widget-label,
+.unlock-dialog .user-widget .user-widget-label {
+  color: #ffffff;
+}
+
+.login-dialog .user-widget .user-icon,
+.unlock-dialog .user-widget .user-icon {
+  background-color: #333333;
+  color: #ffffff;
+}
+
+.login-dialog .login-dialog-prompt-entry,
+.unlock-dialog .login-dialog-prompt-entry {
+  background-color: #000000;
+  border: 3px solid #ffffff;
+  border-radius: 8px;
+  color: #ffffff;
+  padding: 8px 12px;
+  caret-color: #ffffff;
+}
+
+.login-dialog .login-dialog-prompt-entry:focus,
+.unlock-dialog .login-dialog-prompt-entry:focus {
+  border-color: #ffffff;
+  animation: ghostFocusGlow 2s ease-in-out infinite;
+}
+
+.login-dialog .login-dialog-prompt-entry StLabel.hint-text,
+.unlock-dialog .login-dialog-prompt-entry StLabel.hint-text {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.login-dialog .login-dialog-prompt-layout {
+  animation: ghostFadeInUp 0.5s ease-out 0.3s both;
+}
+
+.login-dialog-user-list-view {
+  animation: ghostFadeInUp 0.5s ease-out 0.2s both;
+}

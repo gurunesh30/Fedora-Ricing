@@ -1,0 +1,1049 @@
+/* ═══════════════════════════════════════════════════════════════
+   Ghost of Tsushima - GNOME Shell Dark Theme
+   Wind & Leaves animation with gold/red accent palette
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Color Variables (via repeated values) ──────────────────── */
+/* Near-black: #0a0a0a  Dark charcoal: #1a1a1a  Card grey: #2d2d2d */
+/* Gold: #c8a964  Deep red: #8b1a1a  White: #fafafb */
+
+/* ── Keyframe Animations ───────────────────────────────────── */
+
+@keyframes ghostFadeInUp {
+  from {
+    opacity: 0;
+    translation: 0 30px;
+  }
+  to {
+    opacity: 1;
+    translation: 0 0;
+  }
+}
+
+@keyframes ghostFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes ghostClockGlow {
+  0%   { text-shadow: 0 0 10px rgba(200, 169, 100, 0.2); }
+  50%  { text-shadow: 0 0 25px rgba(200, 169, 100, 0.5), 0 0 50px rgba(200, 169, 100, 0.15); }
+  100% { text-shadow: 0 0 10px rgba(200, 169, 100, 0.2); }
+}
+
+@keyframes ghostMistDrift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes ghostWindSweep {
+  0%   { translation: 0 0; }
+  25%  { translation: 3px 0; }
+  50%  { translation: -2px 0; }
+  75%  { translation: 4px 0; }
+  100% { translation: 0 0; }
+}
+
+@keyframes ghostFocusGlow {
+  0%   { box-shadow: 0 0 0 2px rgba(200, 169, 100, 0.3); }
+  50%  { box-shadow: 0 0 12px 2px rgba(200, 169, 100, 0.5); }
+  100% { box-shadow: 0 0 0 2px rgba(200, 169, 100, 0.3); }
+}
+
+@keyframes ghostLeafFloat {
+  0%   { translation: 0 0; opacity: 0.7; }
+  25%  { translation: 5px 8px; opacity: 0.9; }
+  50%  { translation: -3px 16px; opacity: 0.6; }
+  75%  { translation: 7px 24px; opacity: 0.8; }
+  100% { translation: 0 32px; opacity: 0.5; }
+}
+
+@keyframes ghostPulse {
+  0%   { opacity: 0.85; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.85; }
+}
+
+@keyframes ghostSlideInRight {
+  from {
+    opacity: 0;
+    translation: 40px 0;
+  }
+  to {
+    opacity: 1;
+    translation: 0 0;
+  }
+}
+
+@keyframes ghostBorderGlow {
+  0%   { border-color: rgba(200, 169, 100, 0.3); }
+  50%  { border-color: rgba(200, 169, 100, 0.7); }
+  100% { border-color: rgba(200, 169, 100, 0.3); }
+}
+
+/* ── Global Button Base Styles ─────────────────────────────── */
+
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item,
+.login-dialog .login-dialog-auth-list-item,
+.login-dialog-not-listed-button,
+.unlock-dialog-notifications-container .message StButton,
+.unlock-dialog-notifications-container .unlock-dialog-notification-source StButton,
+.parental-controls-shield .parental-controls-shield-button,
+.unlock-dialog .button,
+.unlock-dialog .icon-button,
+.unlock-dialog .message-notification-group .message-collapse-button,
+.message-notification-group .unlock-dialog .message-collapse-button,
+.unlock-dialog .message .message-header .message-expand-button,
+.message .message-header .unlock-dialog .message-expand-button,
+.unlock-dialog .message .message-header .message-close-button,
+.message .message-header .unlock-dialog .message-close-button,
+.unlock-dialog .screenshot-ui-show-pointer-button,
+.unlock-dialog .login-dialog-auth-list-item,
+#LookingGlassDialog .notebook-tab,
+.screenshot-ui-show-pointer-button,
+.screenshot-ui-type-button,
+#LookingGlassDebugFlags .lg-debug-flag-button,
+#LookingGlassPropertyInspector .lg-obj-inspector-close-button,
+#LookingGlassPropertyInspector .lg-obj-inspector-button,
+#LookingGlassDialog > #Toolbar .lg-toolbar-button,
+.icon-button,
+.login-dialog-button.a11y-button,
+.login-dialog-button.cancel-button,
+.login-dialog-button.switch-user-button,
+.login-dialog-button.login-dialog-session-list-button,
+.message .message-header .message-expand-button {
+  color: #fafafb;
+  background-color: rgba(45, 45, 45, 0.8);
+  border-radius: 999px;
+  border: 1px solid rgba(200, 169, 100, 0.15);
+  transition-duration: 200ms;
+}
+
+.icon-button:focus,
+.login-dialog-button.a11y-button:focus,
+.login-dialog-button.cancel-button:focus,
+.login-dialog-button.switch-user-button:focus,
+.login-dialog-button.login-dialog-session-list-button:focus,
+.screenshot-ui-show-pointer-button:focus,
+.message .message-header .message-expand-button:focus {
+  color: #fafafb;
+  box-shadow: inset 0 0 0 2px rgba(200, 169, 100, 0.4) !important;
+  background-color: rgba(200, 169, 100, 0.15);
+}
+
+.icon-button:hover,
+.login-dialog-button.a11y-button:hover,
+.login-dialog-button.cancel-button:hover,
+.login-dialog-button.switch-user-button:hover,
+.login-dialog-button.login-dialog-session-list-button:hover,
+.screenshot-ui-show-pointer-button:hover,
+.message .message-header .message-expand-button:hover {
+  color: #fafafb;
+  background-color: rgba(200, 169, 100, 0.2);
+  border-color: rgba(200, 169, 100, 0.35);
+}
+
+.icon-button:insensitive,
+.login-dialog-button.a11y-button:insensitive,
+.login-dialog-button.cancel-button:insensitive,
+.login-dialog-button.switch-user-button:insensitive,
+.login-dialog-button.login-dialog-session-list-button:insensitive,
+.screenshot-ui-show-pointer-button:insensitive,
+.message .message-header .message-expand-button:insensitive {
+  color: rgba(250, 250, 251, 0.4);
+  background-color: rgba(45, 45, 45, 0.4);
+}
+
+.icon-button:selected,
+.login-dialog-button.a11y-button:selected,
+.login-dialog-button.cancel-button:selected,
+.login-dialog-button.switch-user-button:selected,
+.login-dialog-button.login-dialog-session-list-button:selected,
+.screenshot-ui-show-pointer-button:selected,
+.message .message-header .message-expand-button:selected,
+.message .message-header .message-close-button:selected,
+.message-notification-group .message-collapse-button:selected,
+.calendar .calendar-month-header .pager-button:selected,
+.button:selected {
+  color: #fafafb;
+  background-color: rgba(200, 169, 100, 0.25);
+  box-shadow: inset 0 0 0 2px rgba(200, 169, 100, 0.5);
+}
+
+.icon-button:active,
+.login-dialog-button.a11y-button:active,
+.login-dialog-button.cancel-button:active,
+.login-dialog-button.switch-user-button:active,
+.login-dialog-button.login-dialog-session-list-button:active,
+.screenshot-ui-show-pointer-button:active,
+.message .message-header .message-expand-button:active {
+  color: #fafafb;
+  background-color: rgba(200, 169, 100, 0.3);
+}
+
+/* ── Flat Buttons ──────────────────────────────────────────── */
+
+.calendar .calendar-day-heading,
+.calendar .calendar-day,
+.calendar .calendar-month-header .calendar-month-label,
+.icon-button.flat,
+.flat.login-dialog-button.a11y-button,
+.flat.login-dialog-button.cancel-button,
+.flat.login-dialog-button.switch-user-button,
+.flat.login-dialog-button.login-dialog-session-list-button,
+.flat.screenshot-ui-show-pointer-button,
+.message .message-header .flat.message-expand-button {
+  color: #fafafb;
+  background-color: transparent;
+  border: none;
+  border-radius: 8px;
+}
+
+.icon-button.flat:hover,
+.flat.login-dialog-button.a11y-button:hover,
+.flat.login-dialog-button.cancel-button:hover,
+.flat.login-dialog-button.switch-user-button:hover,
+.flat.login-dialog-button.login-dialog-session-list-button:hover,
+.flat.screenshot-ui-show-pointer-button:hover,
+.message .message-header .flat.message-expand-button:hover {
+  background-color: rgba(200, 169, 100, 0.12);
+}
+
+/* ── Calendar ──────────────────────────────────────────────── */
+
+.calendar {
+  background-color: rgba(26, 26, 26, 0.9);
+  border-radius: 16px;
+  padding: 12px;
+  border: 1px solid rgba(200, 169, 100, 0.15);
+}
+
+.calendar-month-header {
+  spacing: 4px;
+}
+
+.calendar-month-header .calendar-month-label {
+  font-weight: bold;
+  color: #c8a964;
+}
+
+.calendar-month-header .pager-button {
+  color: #fafafb;
+  padding: 4px 8px;
+}
+
+.calendar-day-heading {
+  color: rgba(200, 169, 100, 0.7);
+  font-weight: bold;
+  padding: 4px;
+}
+
+.calendar-day {
+  color: #fafafb;
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.calendar-day:hover {
+  background-color: rgba(200, 169, 100, 0.15);
+}
+
+.calendar-day-today {
+  background-color: rgba(200, 169, 100, 0.25);
+  color: #c8a964;
+  font-weight: bold;
+}
+
+.calendar-today {
+  padding: 4px;
+}
+
+/* ── Settings (Top Bar / Quick Settings) ───────────────────── */
+
+.system-menu-action {
+  background-color: rgba(45, 45, 45, 0.8);
+  color: #fafafb;
+  border-radius: 999px;
+  border: 1px solid rgba(200, 169, 100, 0.1);
+}
+
+.system-menu-action:hover {
+  background-color: rgba(200, 169, 100, 0.2);
+  border-color: rgba(200, 169, 100, 0.3);
+}
+
+.system-menu-action:active {
+  background-color: rgba(200, 169, 100, 0.3);
+}
+
+/* ── Panel / Top Bar ───────────────────────────────────────── */
+
+.panel-button {
+  color: #fafafb;
+  border-radius: 999px;
+  padding: 0 8px;
+}
+
+.panel-button:hover {
+  background-color: rgba(200, 169, 100, 0.15);
+}
+
+.panel-button:active {
+  background-color: rgba(200, 169, 100, 0.25);
+}
+
+.panel-button:checked {
+  background-color: rgba(200, 169, 100, 0.2);
+  color: #c8a964;
+}
+
+/* ── Dash / App Grid ───────────────────────────────────────── */
+
+.dash-background {
+  background-color: rgba(10, 10, 10, 0.85);
+  border: 1px solid rgba(200, 169, 100, 0.12);
+  border-radius: 16px;
+}
+
+.dash-item:hover .overview-icon {
+  background-color: rgba(200, 169, 100, 0.15);
+}
+
+.dash-separator {
+  background-color: rgba(200, 169, 100, 0.3);
+  width: 1px;
+  height: 24px;
+  margin: 0 4px;
+}
+
+/* ── Overview / App Grid ───────────────────────────────────── */
+
+.overview-icon {
+  border-radius: 16px;
+  padding: 8px;
+}
+
+.overview-icon:hover {
+  background-color: rgba(200, 169, 100, 0.12);
+}
+
+.search-entry {
+  background-color: rgba(45, 45, 45, 0.8);
+  border: 1px solid rgba(200, 169, 100, 0.2);
+  border-radius: 999px;
+  color: #fafafb;
+  padding: 8px 16px;
+}
+
+.search-entry:focus {
+  border-color: rgba(200, 169, 100, 0.5);
+  box-shadow: 0 0 12px rgba(200, 169, 100, 0.2);
+}
+
+/* ── Notifications / Messages ──────────────────────────────── */
+
+.message {
+  background-color: rgba(26, 26, 26, 0.9);
+  border-radius: 16px;
+  border: 1px solid rgba(200, 169, 100, 0.1);
+  color: #fafafb;
+}
+
+.message:hover {
+  border-color: rgba(200, 169, 100, 0.25);
+}
+
+.message .message-header {
+  color: #fafafb;
+}
+
+.message-notification-group .message-collapse-button {
+  color: #fafafb;
+}
+
+/* ── Looking Glass (Debug) ─────────────────────────────────── */
+
+#LookingGlassDialog {
+  background-color: rgba(10, 10, 10, 0.95);
+  border: 1px solid rgba(200, 169, 100, 0.2);
+  border-radius: 16px;
+  color: #fafafb;
+}
+
+#LookingGlassDialog .notebook-tab {
+  color: #fafafb;
+  background-color: rgba(45, 45, 45, 0.6);
+  border-radius: 8px 8px 0 0;
+  padding: 4px 12px;
+}
+
+#LookingGlassDialog .notebook-tab:selected {
+  color: #c8a964;
+  background-color: rgba(200, 169, 100, 0.15);
+  border-bottom: 2px solid #c8a964;
+}
+
+/* ── OSD / On-Screen Display ───────────────────────────────── */
+
+.osd-window {
+  background-color: rgba(10, 10, 10, 0.9);
+  border: 1px solid rgba(200, 169, 100, 0.2);
+  border-radius: 16px;
+  color: #fafafb;
+  padding: 12px;
+}
+
+.osd-window .level {
+  background-color: rgba(200, 169, 100, 0.15);
+  border-radius: 4px;
+  height: 4px;
+}
+
+.osd-window .level:backdrop {
+  background-color: rgba(200, 169, 100, 0.3);
+}
+
+/* ── Workspace Thumbnails ──────────────────────────────────── */
+
+.workspace-thumbnail {
+  background-color: rgba(26, 26, 26, 0.8);
+  border: 2px solid rgba(200, 169, 100, 0.15);
+  border-radius: 8px;
+}
+
+.workspace-thumbnail:active {
+  border-color: rgba(200, 169, 100, 0.5);
+}
+
+/* ── Screenshot UI ─────────────────────────────────────────── */
+
+.screenshot-ui-show-pointer-button,
+.screenshot-ui-type-button {
+  color: #fafafb;
+  background-color: rgba(45, 45, 45, 0.8);
+  border-radius: 999px;
+  padding: 8px;
+  border: 1px solid rgba(200, 169, 100, 0.15);
+}
+
+.screenshot-ui-show-pointer-button:hover,
+.screenshot-ui-type-button:hover {
+  background-color: rgba(200, 169, 100, 0.2);
+}
+
+/* ── Modal Dialog / Prompt Dialog ──────────────────────────── */
+
+.modal-dialog {
+  background-color: rgba(26, 26, 26, 0.95);
+  border: 1px solid rgba(200, 169, 100, 0.2);
+  border-radius: 16px;
+  color: #fafafb;
+}
+
+.prompt-dialog {
+  background-color: rgba(26, 26, 26, 0.95);
+  border: 1px solid rgba(200, 169, 100, 0.2);
+  border-radius: 16px;
+  color: #fafafb;
+}
+
+/* ── LookingGlass Inspector ────────────────────────────────── */
+
+#LookingGlassPropertyInspector {
+  background-color: rgba(10, 10, 10, 0.95);
+  border: 1px solid rgba(200, 169, 100, 0.2);
+  border-radius: 16px;
+  color: #fafafb;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GHOST OF TSUSHIMA - LOGIN / LOCK SCREEN
+   The main event: wind, leaves, gold accents, misty atmosphere
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Lock / Login Screen Background ────────────────────────── */
+
+.unlock-dialog {
+  background-color: transparent;
+  animation: ghostFadeIn 1s ease-out;
+}
+
+.screen-shield-background {
+  background: black;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+#lockDialogGroup {
+  background: url("background.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  animation: ghostMistDrift 30s ease-in-out infinite;
+}
+
+/* ── Clock ─────────────────────────────────────────────────── */
+
+.unlock-dialog-clock {
+  color: #fafafb;
+  spacing: 2em;
+  animation: ghostFadeInUp 0.8s ease-out;
+}
+
+.unlock-dialog-clock .unlock-dialog-clock-time {
+  font-size: 6.546em;
+  font-weight: 800;
+  animation: ghostClockGlow 4s ease-in-out infinite;
+  letter-spacing: 0.02em;
+}
+
+.unlock-dialog-clock .unlock-dialog-clock-date {
+  font-weight: 400;
+  color: rgba(200, 169, 100, 0.8);
+  font-size: 1.818em;
+}
+
+.unlock-dialog-clock .unlock-dialog-clock-hint {
+  margin-top: 2em;
+  padding: 6px 18px;
+  border-radius: 16px;
+  font-weight: bold;
+  background-color: rgba(26, 26, 26, 0.6);
+  border: 1px solid rgba(200, 169, 100, 0.2);
+  color: rgba(200, 169, 100, 0.9);
+}
+
+/* ── Parental Controls Shield ──────────────────────────────── */
+
+.parental-controls-shield {
+  spacing: 0.75em;
+}
+
+.parental-controls-shield .parental-controls-shield-title {
+  margin-top: 0.6em;
+  text-align: center;
+  color: #fafafb;
+}
+
+.parental-controls-shield .parental-controls-shield-description {
+  text-align: center;
+  color: #dedee4;
+}
+
+.parental-controls-shield .parental-controls-shield-button {
+  margin-top: 0.85em;
+  padding: 16px 44px;
+  color: #fafafb;
+  background-color: rgba(200, 169, 100, 0.2);
+  border: 1px solid rgba(200, 169, 100, 0.35);
+  border-radius: 999px;
+}
+
+.parental-controls-shield .parental-controls-shield-button:hover {
+  background-color: rgba(200, 169, 100, 0.35);
+}
+
+/* ── Notification Handles ──────────────────────────────────── */
+
+#unlockDialogNotifications > .vhandle,
+#unlockDialogNotifications > .hhandle {
+  background-color: rgba(45, 45, 45, 0.4);
+}
+
+#unlockDialogNotifications > .vhandle:hover,
+#unlockDialogNotifications > .vhandle:focus,
+#unlockDialogNotifications > .hhandle:hover,
+#unlockDialogNotifications > .hhandle:focus {
+  background-color: rgba(45, 45, 45, 0.6);
+}
+
+#unlockDialogNotifications > .vhandle:active,
+#unlockDialogNotifications > .hhandle:active {
+  background-color: rgba(200, 169, 100, 0.4);
+}
+
+/* ── Notification Container ────────────────────────────────── */
+
+.unlock-dialog-notifications-container {
+  margin: 12px;
+  spacing: 6px;
+  width: 29em;
+  background-color: transparent;
+}
+
+.unlock-dialog-notifications-container .summary-notification-stack-scrollview {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.unlock-dialog-notifications-container .message,
+.unlock-dialog-notifications-container .unlock-dialog-notification-source {
+  padding: 12px 16px;
+  border: none;
+  background-color: rgba(26, 26, 26, 0.8);
+  color: #fafafb;
+  border-radius: 16px;
+  border: 1px solid rgba(200, 169, 100, 0.1);
+}
+
+.unlock-dialog-notifications-container .message.critical,
+.unlock-dialog-notifications-container .unlock-dialog-notification-source.critical {
+  background-color: rgba(139, 26, 26, 0.3);
+  border-color: rgba(139, 26, 26, 0.5);
+}
+
+.unlock-dialog-notifications-container .message:active,
+.unlock-dialog-notifications-container .unlock-dialog-notification-source:active {
+  background-color: rgba(200, 169, 100, 0.15);
+}
+
+.unlock-dialog-notifications-container .message StButton,
+.unlock-dialog-notifications-container .unlock-dialog-notification-source StButton {
+  background-color: transparent;
+}
+
+.unlock-dialog-notifications-container .message StButton:insensitive,
+.unlock-dialog-notifications-container .unlock-dialog-notification-source StButton:insensitive {
+  background-color: transparent;
+  opacity: 0.5;
+}
+
+.unlock-dialog-notifications-container .message .message-header,
+.unlock-dialog-notifications-container .unlock-dialog-notification-source .message-header {
+  color: #fafafb;
+}
+
+/* ── Notification Icons & Labels ───────────────────────────── */
+
+.unlock-dialog-notification-icon {
+  icon-size: 32px;
+}
+
+.unlock-dialog-notification-label {
+  padding-left: 12px;
+  padding-right: 0;
+}
+
+.unlock-dialog-notification-label:rtl {
+  padding-right: 12px;
+  padding-left: 0;
+}
+
+.unlock-dialog-notification-count-text {
+  font-weight: bold;
+  padding: 0 12px;
+  color: #fafafb;
+  background-color: rgba(200, 169, 100, 0.2);
+  border-radius: 999px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LOGIN DIALOG - The main authentication screen
+   ═══════════════════════════════════════════════════════════════ */
+
+.login-dialog,
+.unlock-dialog {
+  color: #fafafb;
+  animation: ghostFadeInUp 0.6s ease-out;
+}
+
+.login-dialog .caps-lock-warning-label,
+.login-dialog .login-dialog-message-warning,
+.unlock-dialog .caps-lock-warning-label,
+.unlock-dialog .login-dialog-message-warning {
+  color: #cd9309;
+}
+
+.login-dialog .login-dialog-prompt-layout,
+.unlock-dialog .login-dialog-prompt-layout {
+  width: 25em;
+  spacing: 9px;
+}
+
+/* ── Bottom Button Group ───────────────────────────────────── */
+
+.login-dialog-bottom-button-group {
+  padding: 32px;
+  spacing: 16px;
+}
+
+/* ── Dialog Buttons ────────────────────────────────────────── */
+
+.login-dialog-button.a11y-button,
+.login-dialog-button.cancel-button,
+.login-dialog-button.switch-user-button,
+.login-dialog-button.login-dialog-session-list-button {
+  padding: 1.091em;
+}
+
+.login-dialog-button.cancel-button {
+  padding: 9px;
+}
+
+.login-dialog-button-box {
+  spacing: 12px;
+}
+
+/* ── Conflicting Session Dialog ────────────────────────────── */
+
+.conflicting-session-dialog-content {
+  spacing: 20px;
+}
+
+.conflicting-session-dialog-content .conflicting-session-dialog-title {
+  text-align: center;
+  margin-bottom: 5px;
+  color: #fafafb;
+}
+
+.conflicting-session-dialog-content .conflicting-session-dialog-desc {
+  text-align: center;
+  color: #dedee4;
+}
+
+.conflicting-session-dialog-content .conflicting-session-dialog-desc-warning {
+  text-align: center;
+  color: #cd9309;
+  background-color: rgba(205, 147, 9, 0.1);
+  padding: 9px;
+  border-radius: 8px;
+  margin: 4px 0;
+}
+
+/* ── Logo ──────────────────────────────────────────────────── */
+
+.login-dialog-logo-bin {
+  margin: 3em 0;
+  animation: ghostFadeIn 1.2s ease-out;
+}
+
+/* ── Banner ────────────────────────────────────────────────── */
+
+.login-dialog-banner-view {
+  max-width: 25em;
+}
+
+.login-dialog-banner-view .login-dialog-banner {
+  color: #dedee4;
+}
+
+/* ── Messages ──────────────────────────────────────────────── */
+
+.login-dialog-message {
+  text-align: center;
+  color: #dedee4;
+}
+
+.login-dialog-message-hint,
+.login-dialog-message {
+  color: #dedee4;
+  min-height: 2.75em;
+}
+
+/* ── User Selection Box ────────────────────────────────────── */
+
+.login-dialog-user-selection-box {
+  padding-top: 4em;
+  padding-bottom: 8em;
+}
+
+/* ── "Not Listed?" Button ──────────────────────────────────── */
+
+.login-dialog-not-listed-label {
+  padding: 6px;
+}
+
+.login-dialog-not-listed-button {
+  color: #fafafb;
+  background-color: rgba(26, 26, 26, 0.8);
+  padding: 0 6px;
+  margin: 6px;
+  border: 1px solid rgba(200, 169, 100, 0.2);
+  border-radius: 999px;
+  animation: ghostSlideInRight 0.5s ease-out;
+}
+
+.login-dialog-not-listed-button:focus {
+  color: #fafafb;
+  box-shadow: inset 0 0 0 2px rgba(200, 169, 100, 0.4) !important;
+  background-color: rgba(200, 169, 100, 0.15);
+}
+
+.login-dialog-not-listed-button:focus:hover {
+  background-color: rgba(200, 169, 100, 0.25);
+}
+
+.login-dialog-not-listed-button:hover {
+  color: #fafafb;
+  background-color: rgba(200, 169, 100, 0.2);
+  border-color: rgba(200, 169, 100, 0.35);
+}
+
+.login-dialog-not-listed-button:active {
+  color: #fafafb;
+  background-color: rgba(200, 169, 100, 0.3);
+}
+
+.login-dialog-not-listed-button:active:hover {
+  background-color: rgba(200, 169, 100, 0.4);
+}
+
+.login-dialog-not-listed-button:active:focus {
+  background-color: rgba(200, 169, 100, 0.35);
+  box-shadow: inset 0 0 0 2px rgba(200, 169, 100, 0.5) !important;
+}
+
+/* ── Auth List ─────────────────────────────────────────────── */
+
+.login-dialog-auth-list-view {
+  -st-vfade-offset: 3em;
+}
+
+.login-dialog-auth-list {
+  spacing: 6px;
+  margin-left: 2em;
+}
+
+.login-dialog-auth-list-title {
+  margin-left: 2em;
+  padding-bottom: 6px;
+  color: rgba(200, 169, 100, 0.8);
+}
+
+.login-dialog .login-dialog-auth-list-item {
+  color: #fafafb;
+  background-color: rgba(45, 45, 45, 0.7);
+  border-radius: 9.6px;
+  padding: 7.2px;
+  border: 1px solid rgba(200, 169, 100, 0.1);
+  animation: ghostWindSweep 8s ease-in-out infinite;
+}
+
+.login-dialog .login-dialog-auth-list-item:selected,
+.login-dialog .login-dialog-auth-list-item:focus {
+  color: #fafafb;
+  box-shadow: inset 0 0 0 2px rgba(200, 169, 100, 0.5) !important;
+  background-color: rgba(200, 169, 100, 0.2);
+  border-color: rgba(200, 169, 100, 0.5);
+}
+
+.login-dialog .login-dialog-auth-list-item:selected:hover,
+.login-dialog .login-dialog-auth-list-item:focus:hover {
+  background-color: rgba(200, 169, 100, 0.3);
+}
+
+.login-dialog .login-dialog-auth-list-item:hover {
+  color: #fafafb;
+  background-color: rgba(200, 169, 100, 0.15);
+  border-color: rgba(200, 169, 100, 0.25);
+}
+
+.login-dialog .login-dialog-auth-list-item:active {
+  color: #fafafb;
+  background-color: rgba(200, 169, 100, 0.25);
+}
+
+.login-dialog .login-dialog-auth-list-item:active:hover {
+  background-color: rgba(200, 169, 100, 0.35);
+}
+
+.login-dialog .login-dialog-auth-list-item:active:focus {
+  background-color: rgba(200, 169, 100, 0.3);
+  box-shadow: inset 0 0 0 2px rgba(200, 169, 100, 0.5) !important;
+}
+
+.unlock-dialog .login-dialog-auth-list-item {
+  border-radius: 9.6px;
+  padding: 7.2px;
+}
+
+/* ── Auth List Labels ──────────────────────────────────────── */
+
+.login-dialog-auth-list-label:ltr {
+  padding-left: 15px;
+  text-align: left;
+}
+
+.login-dialog-auth-list-label:rtl {
+  padding-right: 15px;
+  text-align: right;
+}
+
+/* ── User List ─────────────────────────────────────────────── */
+
+.login-dialog-user-list-view {
+  width: 25em;
+  -st-vfade-offset: 3em;
+}
+
+.login-dialog-user-list-view .login-dialog-user-list {
+  margin: 0 8px;
+  spacing: 12px;
+}
+
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item {
+  color: #fafafb;
+  background-color: rgba(45, 45, 45, 0.7);
+  border-radius: 16px;
+  padding: 9px;
+  border: 1px solid rgba(200, 169, 100, 0.1);
+  animation: ghostWindSweep 10s ease-in-out infinite;
+  transition-duration: 200ms;
+}
+
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item:selected,
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item:focus {
+  color: #fafafb;
+  box-shadow: inset 0 0 0 2px rgba(200, 169, 100, 0.5) !important;
+  background-color: rgba(200, 169, 100, 0.2);
+  border-color: rgba(200, 169, 100, 0.5);
+}
+
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item:selected:hover,
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item:focus:hover {
+  background-color: rgba(200, 169, 100, 0.3);
+}
+
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item:hover {
+  color: #fafafb;
+  background-color: rgba(200, 169, 100, 0.15);
+  border-color: rgba(200, 169, 100, 0.25);
+}
+
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item:active {
+  color: #fafafb;
+  background-color: rgba(200, 169, 100, 0.25);
+}
+
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item:active:hover {
+  background-color: rgba(200, 169, 100, 0.35);
+}
+
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item:active:focus {
+  background-color: rgba(200, 169, 100, 0.3);
+  box-shadow: inset 0 0 0 2px rgba(200, 169, 100, 0.5) !important;
+}
+
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item .user-icon {
+  border: 2px solid transparent;
+}
+
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item .login-dialog-timed-login-indicator {
+  height: 2px;
+  margin-top: 6px;
+  background-color: rgba(200, 169, 100, 0.6);
+}
+
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item:logged-in .user-icon {
+  border-color: #c8a964;
+}
+
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item:logged-in .user-icon StIcon {
+  background-color: rgba(200, 169, 100, 0.3);
+}
+
+/* ── User Widget (Avatar + Name) ───────────────────────────── */
+
+.login-dialog .user-widget .user-widget-label,
+.unlock-dialog .user-widget .user-widget-label {
+  color: #fafafb;
+}
+
+.login-dialog .user-widget .user-icon,
+.unlock-dialog .user-widget .user-icon {
+  background-color: rgba(200, 169, 100, 0.15);
+  color: #fafafb;
+}
+
+.login-dialog .user-widget.horizontal,
+.unlock-dialog .user-widget.horizontal {
+  spacing: 18px;
+}
+
+.login-dialog .user-widget.vertical,
+.unlock-dialog .user-widget.vertical {
+  spacing: 24px;
+}
+
+.login-dialog .user-widget.vertical .user-widget-label,
+.unlock-dialog .user-widget.vertical .user-widget-label {
+  font-weight: 400;
+  font-size: 1.818em;
+  text-align: center;
+  margin-bottom: .75em;
+}
+
+.login-dialog .user-widget.vertical .user-icon,
+.unlock-dialog .user-widget.vertical .user-icon {
+  icon-size: 160px;
+}
+
+.login-dialog .user-widget.vertical .user-icon StIcon,
+.unlock-dialog .user-widget.vertical .user-icon StIcon {
+  padding: 30px;
+}
+
+/* ── Password Entry Field ──────────────────────────────────── */
+
+.login-dialog .login-dialog-prompt-entry,
+.unlock-dialog .login-dialog-prompt-entry {
+  background-color: rgba(26, 26, 26, 0.7);
+  border: 2px solid rgba(200, 169, 100, 0.2);
+  border-radius: 8px;
+  color: #fafafb;
+  padding: 8px 12px;
+  caret-color: #c8a964;
+  selection-background-color: rgba(200, 169, 100, 0.3);
+}
+
+.login-dialog .login-dialog-prompt-entry:focus,
+.unlock-dialog .login-dialog-prompt-entry:focus {
+  border-color: rgba(200, 169, 100, 0.6);
+  animation: ghostFocusGlow 2s ease-in-out infinite;
+  background-color: rgba(26, 26, 26, 0.85);
+}
+
+.login-dialog .login-dialog-prompt-entry StLabel.hint-text,
+.unlock-dialog .login-dialog-prompt-entry StLabel.hint-text {
+  color: rgba(200, 169, 100, 0.5);
+}
+
+/* ── Caps Lock Warning ─────────────────────────────────────── */
+
+.login-dialog .caps-lock-warning-label {
+  color: #cd9309;
+  font-size: 0.9em;
+}
+
+/* ── Session List ──────────────────────────────────────────── */
+
+.login-dialog-session-list-button {
+  color: #fafafb;
+  background-color: rgba(45, 45, 45, 0.6);
+  border-radius: 999px;
+  padding: 4px 8px;
+  border: 1px solid rgba(200, 169, 100, 0.15);
+}
+
+.login-dialog-session-list-button:hover {
+  background-color: rgba(200, 169, 100, 0.2);
+}
+
+/* ── Fingerprint Auth ──────────────────────────────────────── */
+
+.login-dialog-fingerprint-login-hint {
+  color: rgba(200, 169, 100, 0.7);
+  font-size: 0.9em;
+}
+
+/* ── Prompt Layout Animation ───────────────────────────────── */
+
+.login-dialog .login-dialog-prompt-layout {
+  animation: ghostFadeInUp 0.5s ease-out 0.3s both;
+}
+
+/* ── User List View Animation ──────────────────────────────── */
+
+.login-dialog-user-list-view {
+  animation: ghostFadeInUp 0.5s ease-out 0.2s both;
+}
