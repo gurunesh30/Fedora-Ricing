@@ -1,0 +1,261 @@
+# Ghost of Tsushima - Plymouth Boot Theme
+# Wind & Leaves animation with misty mountain atmosphere
+
+# ── Screen Setup ──────────────────────────────────────────────
+screen.w = Window.GetWidth(0);
+screen.h = Window.GetHeight(0);
+screen.center.x = screen.w / 2;
+screen.center.y = screen.h / 2;
+
+# ── Color Constants ───────────────────────────────────────────
+# Near-black background (Ghost of Tsushima palette)
+bg_top.r = 0.04;    bg_top.g = 0.04;    bg_top.b = 0.04;
+bg_bot.r = 0.02;    bg_bot.g = 0.02;    bg_bot.b = 0.02;
+Window.SetBackgroundTopColor(bg_top.r, bg_top.g, bg_top.b);
+Window.SetBackgroundBottomColor(bg_bot.r, bg_bot.g, bg_bot.b);
+
+# ── State Variables ───────────────────────────────────────────
+question = null;
+answer = null;
+message = null;
+bullets = null;
+prompt = null;
+boot_done = 0;
+
+# ── Load Assets ───────────────────────────────────────────────
+# Background (misty mountain scene)
+bg = Image("background.png");
+bg_sprite = Sprite(bg);
+bg_sprite.SetPosition(0, 0);
+bg_sprite.SetZ(-10);
+
+# Ghost mask logo
+logo = Image("logo.png");
+logo_sprite = Sprite(logo);
+logo_sprite.SetPosition(screen.center.x - logo.GetWidth() / 2, screen.center.y - logo.GetHeight() / 2);
+logo_sprite.SetZ(5);
+logo_sprite.SetOpacity(0.0);
+
+# ── Leaf System ───────────────────────────────────────────────
+# Preload leaf animation frames
+leaf_frame_count = 12;
+for (i = 0; i < leaf_frame_count; i++)
+    leaf_img[i] = Image("leaf-" + i + ".png");
+
+# Leaf pool (20 leaves max on screen)
+leaf_max = 20;
+for (i = 0; i < leaf_max; i++) {
+    leaf_sprite[i] = Sprite();
+    leaf_sprite[i].SetZ(3);
+    leaf_sprite[i].SetOpacity(0.0);
+    leaf_active[i] = 0;
+    leaf_x[i] = 0;
+    leaf_y[i] = 0;
+    leaf_vx[i] = 0;
+    leaf_vy[i] = 0;
+    leaf_frame[i] = 0;
+    leaf_rot[i] = 0;
+    leaf_speed[i] = 0;
+}
+
+# ── Wind Particle System ─────────────────────────────────────
+wind_frame_count = 8;
+for (i = 0; i < wind_frame_count; i++)
+    wind_img[i] = Image("wind-particle-" + i + ".png");
+
+wind_max = 12;
+for (i = 0; i < wind_max; i++) {
+    wind_sprite[i] = Sprite();
+    wind_sprite[i].SetZ(2);
+    wind_sprite[i].SetOpacity(0.0);
+    wind_active[i] = 0;
+    wind_x[i] = 0;
+    wind_y[i] = 0;
+    wind_speed[i] = 0;
+    wind_frame[i] = 0;
+}
+
+# ── Mist Layer ────────────────────────────────────────────────
+mist_opacity_target = 0.15;
+mist_opacity = 0.0;
+mist_direction = 1;
+
+# ── Time Tracker ──────────────────────────────────────────────
+tick = 0;
+logo_fade_done = 0;
+
+# ── Helper: Spawn a Leaf ─────────────────────────────────────
+fun spawn_leaf() {
+    for (i = 0; i < leaf_max; i++) {
+        if (leaf_active[i] == 0) {
+            leaf_active[i] = 1;
+            leaf_x[i] = Math.Random() * screen.w;
+            leaf_y[i] = -20;
+            leaf_speed[i] = 0.3 + Math.Random() * 0.8;
+            leaf_vx[i] = -0.5 + Math.Random() * 1.5;
+            leaf_vy[i] = 0.8 + Math.Random() * 1.2;
+            leaf_frame[i] = Math.Int(Math.Random() * leaf_frame_count);
+            leaf_rot[i] = Math.Random() * 360;
+
+            leaf_sprite[i].SetImage(leaf_img[leaf_frame[i]]);
+            leaf_sprite[i].SetOpacity(0.6 + Math.Random() * 0.4);
+            leaf_sprite[i].SetPosition(leaf_x[i], leaf_y[i]);
+            break;
+        }
+    }
+}
+
+# ── Helper: Spawn Wind Particle ──────────────────────────────
+fun spawn_wind() {
+    for (i = 0; i < wind_max; i++) {
+        if (wind_active[i] == 0) {
+            wind_active[i] = 1;
+            wind_x[i] = -50;
+            wind_y[i] = Math.Random() * screen.h;
+            wind_speed[i] = 4.0 + Math.Random() * 6.0;
+            wind_frame[i] = 0;
+
+            wind_sprite[i].SetImage(wind_img[0]);
+            wind_sprite[i].SetOpacity(0.15 + Math.Random() * 0.2);
+            wind_sprite[i].SetPosition(wind_x[i], wind_y[i]);
+            break;
+        }
+    }
+}
+
+# ── Refresh Callback (~50fps) ─────────────────────────────────
+fun refresh_callback() {
+    tick++;
+
+    # ── Logo Fade In (frames 0-100) ───────────────────────────
+    if (tick < 100 && logo_fade_done == 0) {
+        logo_sprite.SetOpacity(tick / 100.0);
+        if (tick >= 100)
+            logo_fade_done = 1;
+    } else if (logo_fade_done == 0) {
+        logo_sprite.SetOpacity(1.0);
+        logo_fade_done = 1;
+    }
+
+    # ── Logo Pulse (after fade-in) ────────────────────────────
+    if (tick > 100) {
+        pulse = 0.85 + 0.15 * Math.Sin(tick * 0.03);
+        logo_sprite.SetOpacity(pulse);
+    }
+
+    # ── Spawn Leaves (every 8 frames) ─────────────────────────
+    if (tick % 8 == 0)
+        spawn_leaf();
+
+    # ── Spawn Wind (every 25 frames) ──────────────────────────
+    if (tick % 25 == 0)
+        spawn_wind();
+
+    # ── Update Leaves ─────────────────────────────────────────
+    for (i = 0; i < leaf_max; i++) {
+        if (leaf_active[i] == 1) {
+            # Wind sway using sine wave
+            leaf_x[i] = leaf_x[i] + leaf_vx[i] + Math.Sin(tick * 0.02 + i) * 0.8;
+            leaf_y[i] = leaf_y[i] + leaf_vy[i] * leaf_speed[i];
+
+            # Cycle animation frames
+            leaf_frame[i] = (leaf_frame[i] + 1) % leaf_frame_count;
+
+            leaf_sprite[i].SetImage(leaf_img[leaf_frame[i]]);
+            leaf_sprite[i].SetPosition(leaf_x[i], leaf_y[i]);
+
+            # Deactivate if off screen
+            if (leaf_y[i] > screen.h + 30 || leaf_x[i] > screen.w + 30 || leaf_x[i] < -30) {
+                leaf_active[i] = 0;
+                leaf_sprite[i].SetOpacity(0.0);
+            }
+        }
+    }
+
+    # ── Update Wind Particles ──────────────────────────────────
+    for (i = 0; i < wind_max; i++) {
+        if (wind_active[i] == 1) {
+            wind_x[i] = wind_x[i] + wind_speed[i];
+
+            # Cycle wind frames
+            if (tick % 3 == 0)
+                wind_frame[i] = (wind_frame[i] + 1) % wind_frame_count;
+
+            wind_sprite[i].SetImage(wind_img[wind_frame[i]]);
+            wind_sprite[i].SetPosition(wind_x[i], wind_y[i]);
+
+            if (wind_x[i] > screen.w + 60) {
+                wind_active[i] = 0;
+                wind_sprite[i].SetOpacity(0.0);
+            }
+        }
+    }
+
+    # ── Mist Opacity Pulsing ──────────────────────────────────
+    mist_opacity = mist_opacity + mist_direction * 0.001;
+    if (mist_opacity > 0.2)
+        mist_direction = -1;
+    if (mist_opacity < 0.05)
+        mist_direction = 1;
+}
+
+Plymouth.SetRefreshFunction(refresh_callback);
+
+# ── Boot Progress ─────────────────────────────────────────────
+fun boot_progress(duration, progress) {
+    if (progress > 0.9 && boot_done == 0) {
+        boot_done = 1;
+    }
+}
+Plymouth.SetBootProgressFunction(boot_progress);
+
+# ── Password Prompt ───────────────────────────────────────────
+fun DisplayPasswordCallback(prompt_text, bulletCount) {
+    # Hide logo during password entry
+    logo_sprite.SetOpacity(0.0);
+
+    # Prompt text
+    prompt.image = Image.Text("Enter Passphrase", 0.78, 0.66, 0.39);
+    prompt.sprite = Sprite(prompt.image);
+    prompt.sprite.SetPosition(screen.center.x - prompt.image.GetWidth() / 2, screen.center.y + 60);
+    prompt.sprite.SetZ(10);
+
+    # Bullet dots
+    totalWidth = bulletCount * 16;
+    startPos = screen.center.x - totalWidth / 2;
+
+    for (i = 0; i < bulletCount; i++) {
+        bullets[i].sprite = Sprite(Image.Text("*", 1, 1, 1));
+        bullets[i].sprite.SetPosition(startPos + i * 16, screen.center.y + 90);
+        bullets[i].sprite.SetZ(10);
+    }
+}
+Plymouth.SetDisplayPasswordFunction(DisplayPasswordCallback);
+
+# ── Question Prompt ───────────────────────────────────────────
+fun DisplayQuestionCallback(prompt_text, entry_text) {
+    q.image = Image.Text(prompt_text, 0.78, 0.66, 0.39);
+    q.sprite = Sprite(q.image);
+    q.sprite.SetPosition(screen.center.x - q.image.GetWidth() / 2, screen.center.y + 60);
+    q.sprite.SetZ(10);
+}
+Plymouth.SetDisplayQuestionFunction(DisplayQuestionCallback);
+
+# ── Normal Display Reset ──────────────────────────────────────
+fun DisplayNormalCallback() {
+    bullets = null;
+    prompt = null;
+    message = null;
+    q = null;
+    logo_sprite.SetOpacity(0.85);
+}
+Plymouth.SetDisplayNormalFunction(DisplayNormalCallback);
+
+# ── System Messages ───────────────────────────────────────────
+fun MessageCallback(text) {
+    msg.image = Image.Text(text, 0.78, 0.66, 0.39);
+    msg.sprite = Sprite(msg.image);
+    msg.sprite.SetPosition(screen.center.x - msg.image.GetWidth() / 2, screen.h - 80);
+    msg.sprite.SetZ(10);
+}
+Plymouth.SetMessageFunction(MessageCallback);

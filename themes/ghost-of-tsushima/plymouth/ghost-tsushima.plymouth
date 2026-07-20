@@ -1,0 +1,9 @@
+[Plymouth Theme]
+Name=Ghost Tsushima
+Description=Ghost of Tsushima inspired boot theme with wind and leaf animations
+Author=Arthur Morgan
+ModuleName=script
+
+[script]
+ScriptFile=/usr/share/plymouth/themes/ghost-tsushima/ghost-tsushima.script
+ImageDir=/usr/share/plymouth/themes/ghost-tsushima/assets
