@@ -16,7 +16,7 @@
 
     "hyprland/window"
 ],
-    "modules-center": [],
+    "modules-center": ["clock"],
 
     "modules-right": [
 
@@ -32,10 +32,6 @@
 
     "pulseaudio",
     "battery",
-
-    "network",
-
-    "clock",
 
     "tray",
 
@@ -127,9 +123,9 @@
 
     "tooltip-format": "{essid}\n{ipaddr}",
 
-    "on-click": "nm-connection-editor",
+    "on-click": "/home/arthurmorgan/.config/waybar/scripts/network-module.py --menu",
 
-    "on-click-right": "nm-connection-editor"
+    "on-click-right": "/home/arthurmorgan/.config/waybar/scripts/network-module.py --menu"
 },
 
     "battery": {
