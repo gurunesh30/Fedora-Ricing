@@ -222,13 +222,13 @@ def main():
     print("  Generating leaf frames (12)...")
     for i in range(12):
         leaf = create_leaf_frame(i, 12)
-        leaf.save(os.path.join(ASSETS_DIR, f"leaf-{i + 1:03d}.png"))
+        leaf.save(os.path.join(ASSETS_DIR, f"leaf-{i}.png"))
     print("  Created 12 leaf frames")
 
     print("  Generating wind particle frames (8)...")
     for i in range(8):
         wind = create_wind_frame(i, 8)
-        wind.save(os.path.join(ASSETS_DIR, f"wind-particle-{i + 1:03d}.png"))
+        wind.save(os.path.join(ASSETS_DIR, f"wind-particle-{i}.png"))
     print("  Created 8 wind particle frames")
 
     print("  Generating background...")
