@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=MSI Control Center
+GenericName=System Monitor & Hardware Control
+Comment=Fan control, performance monitoring, and hardware settings for MSI laptops
+Exec=python3 /home/arthurmorgan/.config/hypr/msi-control-center/main.py
+Icon=utilities-system-monitor
+Terminal=false
+Type=Application
+Categories=System;Monitor;HardwareSettings;
+StartupWMClass=msi-control-center
+Keywords=msi;fan;control;monitor;sensor;hardware;performance;
