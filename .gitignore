@@ -50,6 +50,9 @@
 !themes/
 !themes/**
 
+!msi-control-center/
+!msi-control-center/**
+
 # MPD (track config only, ignore state/db/logs)
 !mpd/
 !mpd/mpd.conf
