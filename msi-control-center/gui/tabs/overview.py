@@ -5,9 +5,9 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt
 
-from ..widgets import StatCard, CircularProgress, NetworkSpeedWidget, BarWidget
-from ..theme import bytes_to_human, seconds_to_human, get_temperature_color, get_usage_color
-from ...core.monitor import SystemSnapshot
+from gui.widgets import StatCard, CircularProgress, NetworkSpeedWidget, BarWidget
+from gui.theme import bytes_to_human, seconds_to_human, get_temperature_color, get_usage_color
+from core.monitor import SystemSnapshot
 
 
 class OverviewTab(QWidget):
@@ -92,9 +92,9 @@ class OverviewTab(QWidget):
         self.ram_gauge.set_value(snap.memory.percent, 100,
                                  QColor(get_usage_color(snap.memory.percent)))
 
-        if snap.battery:
-            self.battery_gauge.set_value(snap.battery.percent, 100,
-                                         QColor(get_usage_color(100 - snap.battery.percent)))
+        if snap.sensors.battery:
+            self.battery_gauge.set_value(snap.sensors.battery.percent, 100,
+                                         QColor(get_usage_color(100 - snap.sensors.battery.percent)))
         else:
             self.battery_gauge.set_value(0, 100, QColor("#565f89"))
 

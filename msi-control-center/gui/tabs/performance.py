@@ -6,9 +6,9 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt
 
-from ..widgets import BarWidget, StatCard
-from ..theme import bytes_to_human, get_usage_color
-from ...core.monitor import SystemSnapshot
+from gui.widgets import BarWidget, StatCard
+from gui.theme import bytes_to_human, get_usage_color
+from core.monitor import SystemSnapshot
 
 
 class PerformanceTab(QWidget):

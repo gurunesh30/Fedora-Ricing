@@ -6,8 +6,8 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt
 
-from ..widgets import SensorRow, StatCard
-from ...core.monitor import SystemSnapshot
+from gui.widgets import SensorRow, StatCard
+from core.monitor import SystemSnapshot
 
 
 class SensorsTab(QWidget):
@@ -115,8 +115,8 @@ class SensorsTab(QWidget):
         else:
             self.volt_layout.addWidget(QLabel("No voltage sensors found."))
 
-        if snap.battery:
-            b = snap.battery
+        if snap.sensors.battery:
+            b = snap.sensors.battery
             self.bat_labels["percent"].setText(f"{b.percent:.1f}%")
             status = "Charging" if b.power_plugged else "Discharging"
             if b.percent >= 100 and b.power_plugged:

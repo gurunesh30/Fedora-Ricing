@@ -6,10 +6,10 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, Signal
 
-from ..widgets import StatCard
-from ..theme import get_fan_color
-from ...core.hardware import HardwareController, ECStatus
-from ...core.config import FAN_CURVE_PRESETS, SHIFT_MODES
+from gui.widgets import StatCard
+from gui.theme import get_fan_color
+from core.hardware import HardwareController, ECStatus
+from core.config import FAN_CURVE_PRESETS, SHIFT_MODES
 
 
 class HardwareTab(QWidget):

@@ -12,9 +12,9 @@ from dataclasses import dataclass, field
 import psutil
 from PySide6.QtCore import QObject, Signal, Slot
 
-from .config import GRAPH_MAX_POINTS
-from .hardware import HardwareController, ECStatus
-from .sensors import SensorReader, SensorSnapshot
+from core.config import GRAPH_MAX_POINTS
+from core.hardware import HardwareController, ECStatus
+from core.sensors import SensorReader, SensorSnapshot
 
 
 @dataclass

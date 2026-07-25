@@ -53,7 +53,7 @@ class BatteryInfo:
 
 @dataclass
 class SensorSnapshot:
-    temperatures: list[TempReading] = field(default_factory=list)
+    temps: list[TempReading] = field(default_factory=list)
     fans: list[FanReading] = field(default_factory=list)
     voltages: list[VoltageReading] = field(default_factory=list)
     battery: Optional[BatteryInfo] = None
@@ -84,16 +84,6 @@ class SensorReader:
                 if os.path.isfile(label_file):
                     with open(label_file) as f:
                         label = f.read().strip()
-                high = 0.0
-                crit = 0.0
-                for suffix, attr in [("_max", "high"), ("_crit", "critical")]:
-                    p = os.path.join(hwmon_dir, f"temp{idx}{suffix}")
-                    if os.path.isfile(p):
-                        with open(p) as f:
-                            val = f.read().strip()
-                            if val.isdigit():
-                                setattr(info["temps"][-1] if info["temps"] else type("", (), {})(),
-                                        attr, int(val) / 1000.0) if False else None
                 info["temps"].append({
                     "path": temp_file,
                     "label": label,

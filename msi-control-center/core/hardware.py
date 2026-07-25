@@ -10,7 +10,7 @@ import logging
 from dataclasses import dataclass, field
 from typing import Optional
 
-from .config import MSI_EC_BASE, MSI_EC_CPU, MSI_EC_GPU
+from core.config import MSI_EC_BASE, MSI_EC_CPU, MSI_EC_GPU
 
 log = logging.getLogger(__name__)
 

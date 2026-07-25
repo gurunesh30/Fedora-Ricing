@@ -6,14 +6,14 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, Slot, QTimer
 
-from ..core.config import APP_NAME, APP_VERSION, UPDATE_INTERVAL_MS
-from ..core.monitor import MonitorService, SystemSnapshot
-from ..core.hardware import HardwareController
-from .theme import DARK_THEME
-from .tabs.overview import OverviewTab
-from .tabs.performance import PerformanceTab
-from .tabs.hardware import HardwareTab
-from .tabs.sensors import SensorsTab
+from core.config import APP_NAME, APP_VERSION, UPDATE_INTERVAL_MS
+from core.monitor import MonitorService, SystemSnapshot
+from core.hardware import HardwareController
+from gui.theme import DARK_THEME
+from gui.tabs.overview import OverviewTab
+from gui.tabs.performance import PerformanceTab
+from gui.tabs.hardware import HardwareTab
+from gui.tabs.sensors import SensorsTab
 
 log = logging.getLogger(__name__)
 

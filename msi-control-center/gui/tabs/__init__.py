@@ -1,6 +1,6 @@
-from .overview import OverviewTab
-from .performance import PerformanceTab
-from .hardware import HardwareTab
-from .sensors import SensorsTab
+from gui.tabs.overview import OverviewTab
+from gui.tabs.performance import PerformanceTab
+from gui.tabs.hardware import HardwareTab
+from gui.tabs.sensors import SensorsTab
 
 __all__ = ["OverviewTab", "PerformanceTab", "HardwareTab", "SensorsTab"]

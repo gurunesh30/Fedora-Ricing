@@ -6,7 +6,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, Property
 from PySide6.QtGui import QPainter, QColor, QPen, QLinearGradient
 
-from .theme import get_temperature_color, get_usage_color, bytes_to_human
+from gui.theme import get_temperature_color, get_usage_color, bytes_to_human
 
 
 class StatCard(QFrame):
