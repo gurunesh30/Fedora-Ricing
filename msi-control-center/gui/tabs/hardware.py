@@ -1,20 +1,31 @@
-"""MSI hardware control tab — fan modes, shift modes, cooler boost, peripherals."""
+"""Hardware — fan RPM speedometers, EC status."""
+
+import glob
+import os
 
 from PySide6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QFrame, QGroupBox,
-    QPushButton, QComboBox, QSlider, QGridLayout, QScrollArea, QButtonGroup,
+    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QFrame, QScrollArea, QGroupBox,
+    QPushButton, QComboBox, QGridLayout,
 )
 from PySide6.QtCore import Qt, Signal
+from PySide6.QtGui import QColor
 
-from gui.widgets import StatCard
+from gui.widgets import Speedometer
 from gui.theme import get_fan_color
-from core.hardware import HardwareController, ECStatus
-from core.config import FAN_CURVE_PRESETS, SHIFT_MODES
+from core.hardware import HardwareController
+from core.config import SHIFT_MODES
+
+MSI_WMI_HWMON = None
+for p in sorted(glob.glob("/sys/class/hwmon/hwmon*")):
+    name_file = os.path.join(p, "name")
+    if os.path.isfile(name_file):
+        with open(name_file) as f:
+            if f.read().strip() == "msi_wmi_platform":
+                MSI_WMI_HWMON = p
+                break
 
 
 class HardwareTab(QWidget):
-    """MSI-specific hardware controls."""
-
     ec_write = Signal(str, str)
 
     def __init__(self, hardware: HardwareController, parent=None):
@@ -29,113 +40,86 @@ class HardwareTab(QWidget):
 
         container = QWidget()
         layout = QVBoxLayout(container)
-        layout.setContentsMargins(16, 12, 16, 12)
-        layout.setSpacing(14)
+        layout.setContentsMargins(20, 16, 20, 16)
+        layout.setSpacing(20)
 
-        header = QLabel("Hardware Control")
+        header = QLabel("HARDWARE")
         header.setProperty("class", "title")
+        header.setAlignment(Qt.AlignCenter)
         layout.addWidget(header)
 
-        self.status_label = QLabel("")
-        self.status_label.setStyleSheet("color: #565f89; font-size: 11px;")
-        layout.addWidget(self.status_label)
+        fan_label = QLabel("FAN SPEEDS")
+        fan_label.setProperty("class", "subtitle")
+        fan_label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(fan_label)
 
-        ec_group = QGroupBox("Embedded Controller")
-        ec_layout = QGridLayout(ec_group)
-        ec_layout.setSpacing(10)
+        fan_row = QHBoxLayout()
+        fan_row.setSpacing(30)
+        fan_row.setAlignment(Qt.AlignCenter)
+        self.fan_gauges: list[Speedometer] = []
+        for i in range(4):
+            g = Speedometer(f"FAN {i+1}", 180)
+            self.fan_gauges.append(g)
+            fan_row.addWidget(g)
+        layout.addLayout(fan_row)
 
-        ec_layout.addWidget(QLabel("EC Firmware:"), 0, 0)
-        self.fw_version = QLabel("—")
-        ec_layout.addWidget(self.fw_version, 0, 1)
-        ec_layout.addWidget(QLabel("EC Date:"), 0, 2)
-        self.fw_date = QLabel("—")
-        ec_layout.addWidget(self.fw_date, 0, 3)
-        layout.addWidget(ec_group)
+        self.fan_note = QLabel("")
+        self.fan_note.setStyleSheet("color: #666666; font-size: 11px;")
+        self.fan_note.setAlignment(Qt.AlignCenter)
+        layout.addWidget(self.fan_note)
 
-        fan_group = QGroupBox("Fan Control")
-        fan_layout = QVBoxLayout(fan_group)
+        ec_label = QLabel("MSI EC")
+        ec_label.setProperty("class", "subtitle")
+        ec_label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(ec_label)
 
-        fan_mode_row = QHBoxLayout()
-        fan_mode_row.addWidget(QLabel("Fan Mode:"))
+        self.ec_status = QLabel("")
+        self.ec_status.setStyleSheet("font-size: 12px;")
+        self.ec_status.setAlignment(Qt.AlignCenter)
+        layout.addWidget(self.ec_status)
+
+        ctrl_row = QHBoxLayout()
+        ctrl_row.setSpacing(20)
+        ctrl_row.setAlignment(Qt.AlignCenter)
+
+        fan_mode_col = QVBoxLayout()
+        fan_mode_col.setAlignment(Qt.AlignCenter)
+        fan_mode_lbl = QLabel("FAN MODE")
+        fan_mode_lbl.setStyleSheet("color: #8b2020; font-weight: bold; font-size: 11px;")
+        fan_mode_lbl.setAlignment(Qt.AlignCenter)
+        fan_mode_col.addWidget(fan_mode_lbl)
         self.fan_mode_combo = QComboBox()
         self.fan_mode_combo.addItems(["auto", "silent", "basic", "advanced"])
         self.fan_mode_combo.currentTextChanged.connect(self._on_fan_mode_changed)
-        fan_mode_row.addWidget(self.fan_mode_combo)
-        fan_mode_row.addStretch()
-        fan_layout.addLayout(fan_mode_row)
+        fan_mode_col.addWidget(self.fan_mode_combo)
+        ctrl_row.addLayout(fan_mode_col)
 
-        self.cooler_boost_btn = QPushButton("Cooler Boost (Max Fans)")
+        cooler_col = QVBoxLayout()
+        cooler_col.setAlignment(Qt.AlignCenter)
+        cooler_lbl = QLabel("COOLER BOOST")
+        cooler_lbl.setStyleSheet("color: #8b2020; font-weight: bold; font-size: 11px;")
+        cooler_lbl.setAlignment(Qt.AlignCenter)
+        cooler_col.addWidget(cooler_lbl)
+        self.cooler_boost_btn = QPushButton("OFF")
         self.cooler_boost_btn.setCheckable(True)
+        self.cooler_boost_btn.setFixedWidth(120)
         self.cooler_boost_btn.clicked.connect(self._on_cooler_boost)
-        fan_layout.addWidget(self.cooler_boost_btn)
+        cooler_col.addWidget(self.cooler_boost_btn, alignment=Qt.AlignCenter)
+        ctrl_row.addLayout(cooler_col)
 
-        fan_stats_row = QHBoxLayout()
-        self.cpu_fan_card = StatCard("CPU Fan", "—", "RPM")
-        self.gpu_fan_card = StatCard("GPU Fan", "—", "RPM")
-        fan_stats_row.addWidget(self.cpu_fan_card)
-        fan_stats_row.addWidget(self.gpu_fan_card)
-        fan_layout.addLayout(fan_stats_row)
+        shift_col = QVBoxLayout()
+        shift_col.setAlignment(Qt.AlignCenter)
+        shift_lbl = QLabel("SHIFT MODE")
+        shift_lbl.setStyleSheet("color: #8b2020; font-weight: bold; font-size: 11px;")
+        shift_lbl.setAlignment(Qt.AlignCenter)
+        shift_col.addWidget(shift_lbl)
+        self.shift_combo = QComboBox()
+        self.shift_combo.addItems(SHIFT_MODES)
+        self.shift_combo.currentTextChanged.connect(self._on_shift_mode)
+        shift_col.addWidget(self.shift_combo)
+        ctrl_row.addLayout(shift_col)
 
-        layout.addWidget(fan_group)
-
-        shift_group = QGroupBox("Performance Profile")
-        shift_layout = QVBoxLayout(shift_group)
-
-        shift_btn_row = QHBoxLayout()
-        self.shift_buttons: dict[str, QPushButton] = {}
-        self.shift_group = QButtonGroup(self)
-        for mode in SHIFT_MODES:
-            btn = QPushButton(mode.capitalize())
-            btn.setCheckable(True)
-            btn.setMinimumWidth(90)
-            self.shift_group.addButton(btn)
-            self.shift_buttons[mode] = btn
-            btn.clicked.connect(lambda checked, m=mode: self._on_shift_mode(m))
-            shift_btn_row.addWidget(btn)
-        shift_btn_row.addStretch()
-        shift_layout.addLayout(shift_btn_row)
-        layout.addWidget(shift_group)
-
-        kb_group = QGroupBox("Keyboard Backlight")
-        kb_layout = QHBoxLayout(kb_group)
-        kb_layout.addWidget(QLabel("Brightness:"))
-        self.kb_slider = QSlider(Qt.Horizontal)
-        self.kb_slider.setRange(0, 3)
-        self.kb_slider.setTickPosition(QSlider.TicksBelow)
-        self.kb_slider.setTickInterval(1)
-        self.kb_slider.valueChanged.connect(self._on_kb_backlight)
-        kb_layout.addWidget(self.kb_slider)
-        self.kb_level_label = QLabel("0")
-        self.kb_level_label.setFixedWidth(30)
-        kb_layout.addWidget(self.kb_level_label)
-        layout.addWidget(kb_group)
-
-        periph_group = QGroupBox("Peripherals")
-        periph_layout = QGridLayout(periph_group)
-
-        periph_layout.addWidget(QLabel("Webcam:"), 0, 0)
-        self.webcam_combo = QComboBox()
-        self.webcam_combo.addItems(["on", "off"])
-        self.webcam_combo.currentTextChanged.connect(
-            lambda v: self.ec_write.emit("webcam", v)
-        )
-        periph_layout.addWidget(self.webcam_combo, 0, 1)
-
-        periph_layout.addWidget(QLabel("Fn Key Position:"), 1, 0)
-        self.fn_combo = QComboBox()
-        self.fn_combo.addItems(["left", "right"])
-        self.fn_combo.currentTextChanged.connect(
-            lambda v: self.ec_write.emit("fn_key", v)
-        )
-        periph_layout.addWidget(self.fn_combo, 1, 1)
-
-        periph_layout.addWidget(QLabel("Super Battery:"), 2, 0)
-        self.super_bat_btn = QPushButton("Off")
-        self.super_bat_btn.setCheckable(True)
-        self.super_bat_btn.clicked.connect(self._on_super_battery)
-        periph_layout.addWidget(self.super_bat_btn, 2, 1)
-
-        layout.addWidget(periph_group)
+        layout.addLayout(ctrl_row)
         layout.addStretch()
 
         scroll.setWidget(container)
@@ -145,68 +129,58 @@ class HardwareTab(QWidget):
 
     def update_data(self, snap):
         ec = snap.ec
-        if not ec.available:
-            self.status_label.setText(
-                "⚠ msi-ec module not loaded. Install: https://github.com/BeardOverflow/msi-ec"
-            )
-            return
 
-        self.status_label.setText("✓ MSI EC connected")
-        self.fw_version.setText(ec.firmware_version or "—")
-        self.fw_date.setText(ec.firmware_date or "—")
+        for i, g in enumerate(self.fan_gauges):
+            rpm = 0
+            for f in snap.sensors.fans:
+                if f"fan{i+1}" in f.label.lower():
+                    rpm = f.speed_rpm
+                    break
+            color = QColor(get_fan_color(rpm, 6000))
+            g.set_value(rpm, 6000, color)
+            g.set_suffix("RPM")
 
-        if ec.fan_mode and self.fan_mode_combo.currentText() != ec.fan_mode:
-            idx = self.fan_mode_combo.findText(ec.fan_mode)
-            if idx >= 0:
-                self.fan_mode_combo.blockSignals(True)
-                self.fan_mode_combo.setCurrentIndex(idx)
-                self.fan_mode_combo.blockSignals(False)
+        active = sum(1 for f in snap.sensors.fans if f.speed_rpm > 0)
+        self.fan_note.setText(
+            f"{len(snap.sensors.fans)} channels detected  |  {active} active"
+        )
 
-        self.cooler_boost_btn.setChecked(ec.cooler_boost)
+        if ec.available:
+            self.ec_status.setText("✓ msi-ec connected — controls active")
+            self.ec_status.setStyleSheet("color: #8b2020; font-weight: bold; font-size: 12px;")
+            self.fan_mode_combo.setEnabled(True)
+            self.cooler_boost_btn.setEnabled(True)
+            self.shift_combo.setEnabled(True)
 
-        if ec.shift_mode:
-            for mode, btn in self.shift_buttons.items():
-                btn.setChecked(mode == ec.shift_mode)
+            if ec.fan_mode and self.fan_mode_combo.currentText() != ec.fan_mode:
+                idx = self.fan_mode_combo.findText(ec.fan_mode)
+                if idx >= 0:
+                    self.fan_mode_combo.blockSignals(True)
+                    self.fan_mode_combo.setCurrentIndex(idx)
+                    self.fan_mode_combo.blockSignals(False)
+            self.cooler_boost_btn.setChecked(ec.cooler_boost)
+            self.cooler_boost_btn.setText("ON" if ec.cooler_boost else "OFF")
 
-        cpu_fan = ec.cpu_fan_speed
-        gpu_fan = ec.gpu_fan_speed
-        self.cpu_fan_card.set_value(f"{cpu_fan}", get_fan_color(cpu_fan))
-        self.cpu_fan_card.set_subtitle(f"{cpu_fan * 60} RPM est.")
-        self.gpu_fan_card.set_value(f"{gpu_fan}", get_fan_color(gpu_fan))
-        self.gpu_fan_card.set_subtitle(f"{gpu_fan * 60} RPM est.")
-
-        if ec.webcam:
-            idx = self.webcam_combo.findText(ec.webcam)
-            if idx >= 0:
-                self.webcam_combo.blockSignals(True)
-                self.webcam_combo.setCurrentIndex(idx)
-                self.webcam_combo.blockSignals(False)
-
-        if ec.fn_key:
-            idx = self.fn_combo.findText(ec.fn_key)
-            if idx >= 0:
-                self.fn_combo.blockSignals(True)
-                self.fn_combo.setCurrentIndex(idx)
-                self.fn_combo.blockSignals(False)
-
-        self.super_bat_btn.setChecked(ec.super_battery == "on")
-        self.super_bat_btn.setText("On" if ec.super_battery == "on" else "Off")
+            if ec.shift_mode:
+                idx = self.shift_combo.findText(ec.shift_mode)
+                if idx >= 0:
+                    self.shift_combo.blockSignals(True)
+                    self.shift_combo.setCurrentIndex(idx)
+                    self.shift_combo.blockSignals(False)
+        else:
+            self.ec_status.setText("msi-ec not loaded — monitoring only")
+            self.ec_status.setStyleSheet("color: #666666; font-size: 12px;")
+            self.fan_mode_combo.setEnabled(False)
+            self.cooler_boost_btn.setEnabled(False)
+            self.shift_combo.setEnabled(False)
 
     def _on_fan_mode_changed(self, mode: str):
         self.ec_write.emit("fan_mode", mode)
 
     def _on_cooler_boost(self):
         enabled = self.cooler_boost_btn.isChecked()
+        self.cooler_boost_btn.setText("ON" if enabled else "OFF")
         self.ec_write.emit("cooler_boost", "on" if enabled else "off")
 
     def _on_shift_mode(self, mode: str):
         self.ec_write.emit("shift_mode", mode)
-
-    def _on_kb_backlight(self, level: int):
-        self.kb_level_label.setText(str(level))
-        self._hw.set_keyboard_backlight(level)
-
-    def _on_super_battery(self):
-        enabled = self.super_bat_btn.isChecked()
-        self.super_bat_btn.setText("On" if enabled else "Off")
-        self.ec_write.emit("super_battery", "on" if enabled else "off")

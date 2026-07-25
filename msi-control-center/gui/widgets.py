@@ -1,64 +1,21 @@
-"""Reusable custom widgets for the control center."""
+"""Speedometer-only widget set."""
 
-from PySide6.QtWidgets import (
-    QFrame, QVBoxLayout, QHBoxLayout, QLabel, QProgressBar, QGridLayout,
-)
-from PySide6.QtCore import Qt, Property
-from PySide6.QtGui import QPainter, QColor, QPen, QLinearGradient
-
-from gui.theme import get_temperature_color, get_usage_color, bytes_to_human
+from PySide6.QtWidgets import QFrame, QVBoxLayout, QLabel
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QPainter, QColor, QPen, QLinearGradient, QRadialGradient, QFont
 
 
-class StatCard(QFrame):
-    """A small card showing a label, a large value, and optional subtitle."""
+class Speedometer(QFrame):
+    """Circular speedometer gauge with arc, value, and label."""
 
-    def __init__(self, title: str, value: str = "—", subtitle: str = "", parent=None):
-        super().__init__(parent)
-        self.setProperty("class", "card")
-        self.setMinimumWidth(160)
-        self.setMaximumHeight(110)
-
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(14, 10, 14, 10)
-        layout.setSpacing(2)
-
-        self._title = QLabel(title)
-        self._title.setProperty("class", "subtitle")
-        self._title.setAlignment(Qt.AlignLeft)
-
-        self._value = QLabel(value)
-        self._value.setProperty("class", "value-large")
-        self._value.setAlignment(Qt.AlignLeft)
-
-        self._subtitle = QLabel(subtitle)
-        self._subtitle.setAlignment(Qt.AlignLeft)
-        self._subtitle.setStyleSheet("color: #565f89; font-size: 11px;")
-
-        layout.addWidget(self._title)
-        layout.addWidget(self._value)
-        layout.addWidget(self._subtitle)
-
-    def set_value(self, value: str, color: str = ""):
-        self._value.setText(value)
-        if color:
-            self._value.setStyleSheet(f"color: {color}; font-size: 28px; font-weight: bold;")
-
-    def set_subtitle(self, text: str, color: str = ""):
-        self._subtitle.setText(text)
-        if color:
-            self._subtitle.setStyleSheet(f"color: {color}; font-size: 11px;")
-
-
-class CircularProgress(QFrame):
-    """A circular progress gauge drawn with QPainter."""
-
-    def __init__(self, label: str = "", size: int = 120, parent=None):
+    def __init__(self, label: str = "", size: int = 160, parent=None):
         super().__init__(parent)
         self._value = 0.0
         self._max = 100.0
         self._label = label
         self._suffix = "%"
-        self._color = QColor("#7aa2f7")
+        self._color = QColor("#8b2020")
+        self._unit_label = ""
         self.setFixedSize(size, size)
 
     def set_value(self, value: float, max_val: float = 100.0, color: QColor = None):
@@ -68,172 +25,99 @@ class CircularProgress(QFrame):
             self._color = color
         self.update()
 
+    def set_suffix(self, s: str):
+        self._suffix = s
+
+    def set_unit_label(self, s: str):
+        self._unit_label = s
+
     def paintEvent(self, event):
-        painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing)
+        p = QPainter(self)
+        p.setRenderHint(QPainter.Antialiasing)
 
         w, h = self.width(), self.height()
-        margin = 6
-        pen_width = 8
-        rect_size = min(w, h) - margin * 2
-        x = (w - rect_size) / 2
-        y = (h - rect_size) / 2
+        cx, cy = w / 2, h / 2
+        radius = min(w, h) / 2 - 10
+        pen_w = 6
 
-        bg_pen = QPen(QColor("#2f3549"), pen_width, Qt.SolidLine, Qt.RoundCap)
-        painter.setPen(bg_pen)
-        painter.drawArc(
-            int(x), int(y), int(rect_size), int(rect_size),
-            225 * 16, -270 * 16
-        )
+        # Background dark circle
+        p.setPen(Qt.NoPen)
+        p.setBrush(QColor("#0f0f0f"))
+        p.drawEllipse(int(cx - radius - 4), int(cy - radius - 4),
+                       int((radius + 4) * 2), int((radius + 4) * 2))
 
+        # Arc track
+        arc_rect_w = int(radius * 2)
+        arc_rect_h = int(radius * 2)
+        arc_x = int(cx - radius)
+        arc_y = int(cy - radius)
+
+        bg_pen = QPen(QColor("#1a1a1a"), pen_w)
+        bg_pen.setCapStyle(Qt.RoundCap)
+        p.setPen(bg_pen)
+        p.drawArc(arc_x, arc_y, arc_rect_w, arc_rect_h, 225 * 16, -270 * 16)
+
+        # Filled arc
         pct = self._value / self._max if self._max > 0 else 0
         span = int(-270 * 16 * pct)
 
-        grad = QLinearGradient(0, 0, w, h)
-        grad.setColorAt(0, self._color)
-        grad.setColorAt(1, QColor("#7dcfff"))
+        # Gradient on the arc
+        fg_pen = QPen(self._color, pen_w)
+        fg_pen.setCapStyle(Qt.RoundCap)
+        p.setPen(fg_pen)
+        p.drawArc(arc_x, arc_y, arc_rect_w, arc_rect_h, 225 * 16, span)
 
-        fg_pen = QPen(self._color, pen_width, Qt.SolidLine, Qt.RoundCap)
-        painter.setPen(fg_pen)
-        painter.drawArc(
-            int(x), int(y), int(rect_size), int(rect_size),
-            225 * 16, span
-        )
+        # Tick marks
+        p.setPen(QPen(QColor("#2a2a2a"), 1))
+        import math
+        for i in range(28):
+            angle = math.radians(225 - i * (270 / 27))
+            inner = radius - 12
+            outer = radius - 6
+            x1 = cx + inner * math.cos(angle)
+            y1 = cy - inner * math.sin(angle)
+            x2 = cx + outer * math.cos(angle)
+            y2 = cy - outer * math.sin(angle)
+            p.drawLine(int(x1), int(y1), int(x2), int(y2))
 
-        painter.setPen(QColor("#c0caf5"))
-        font = painter.font()
-        font.setPixelSize(int(rect_size * 0.22))
+        # Major ticks at 0, 25, 50, 75, 100%
+        p.setPen(QPen(QColor("#444444"), 2))
+        for i in range(5):
+            angle = math.radians(225 - i * (270 / 4))
+            inner = radius - 16
+            outer = radius - 6
+            x1 = cx + inner * math.cos(angle)
+            y1 = cy - inner * math.sin(angle)
+            x2 = cx + outer * math.cos(angle)
+            y2 = cy - outer * math.sin(angle)
+            p.drawLine(int(x1), int(y1), int(x2), int(y2))
+
+        # Value text
+        p.setPen(QColor("#d4d4d4"))
+        font = QFont("JetBrains Mono", int(radius * 0.24), QFont.Bold)
+        p.setFont(font)
+        val_text = f"{self._value:.0f}" if self._value < 1000 else f"{self._value:.0f}"
+        p.drawText(int(cx - radius), int(cy - radius * 0.35),
+                   arc_rect_w, int(radius * 0.5),
+                   Qt.AlignCenter, val_text)
+
+        # Suffix / unit
+        if self._suffix:
+            p.setPen(QColor("#666666"))
+            font.setPixelSize(int(radius * 0.13))
+            font.setBold(False)
+            p.setFont(font)
+            p.drawText(int(cx - radius), int(cy + radius * 0.05),
+                       arc_rect_w, int(radius * 0.3),
+                       Qt.AlignCenter, self._unit_label or self._suffix)
+
+        # Label at bottom
+        p.setPen(QColor("#8b2020"))
+        font.setPixelSize(int(radius * 0.14))
         font.setBold(True)
-        painter.setFont(font)
-        painter.drawText(
-            int(x), int(y), int(rect_size), int(rect_size),
-            Qt.AlignCenter, f"{self._value:.0f}{self._suffix}"
-        )
+        p.setFont(font)
+        p.drawText(int(cx - radius), int(cy + radius * 0.45),
+                   arc_rect_w, int(radius * 0.3),
+                   Qt.AlignHCenter | Qt.AlignTop, self._label)
 
-        font.setPixelSize(int(rect_size * 0.12))
-        font.setBold(False)
-        painter.setFont(font)
-        painter.setPen(QColor("#7aa2f7"))
-        painter.drawText(
-            int(x), int(y + rect_size * 0.6), int(rect_size), int(rect_size * 0.3),
-            Qt.AlignHCenter | Qt.AlignTop, self._label
-        )
-        painter.end()
-
-
-class BarWidget(QFrame):
-    """Horizontal bar with label and value display."""
-
-    def __init__(self, label: str = "", parent=None):
-        super().__init__(parent)
-        self.setProperty("class", "card")
-        self.setMaximumHeight(60)
-
-        layout = QHBoxLayout(self)
-        layout.setContentsMargins(12, 6, 12, 6)
-        layout.setSpacing(10)
-
-        self._label = QLabel(label)
-        self._label.setFixedWidth(120)
-        self._label.setStyleSheet("font-weight: bold;")
-
-        self._bar = QProgressBar()
-        self._bar.setTextVisible(True)
-        self._bar.setFormat("%p%")
-        self._bar.setRange(0, 100)
-        self._bar.setValue(0)
-
-        self._detail = QLabel("")
-        self._detail.setFixedWidth(100)
-        self._detail.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        self._detail.setStyleSheet("color: #565f89; font-size: 11px;")
-
-        layout.addWidget(self._label)
-        layout.addWidget(self._bar, 1)
-        layout.addWidget(self._detail)
-
-    def set_value(self, percent: float, detail: str = ""):
-        self._bar.setValue(int(percent))
-        color = get_usage_color(percent)
-        self._bar.setStyleSheet(
-            f"QProgressBar::chunk {{ border-radius: 6px; background: {color}; }}"
-        )
-        if detail:
-            self._detail.setText(detail)
-
-
-class SensorRow(QFrame):
-    """A row in the sensors table showing label, value, and optional range bar."""
-
-    def __init__(self, label: str, unit: str = "°C", parent=None):
-        super().__init__(parent)
-        self._unit = unit
-
-        layout = QHBoxLayout(self)
-        layout.setContentsMargins(8, 4, 8, 4)
-        layout.setSpacing(10)
-
-        self._label = QLabel(label)
-        self._label.setFixedWidth(200)
-        self._label.setStyleSheet("font-size: 12px;")
-
-        self._value = QLabel("—")
-        self._value.setFixedWidth(80)
-        self._value.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        self._value.setStyleSheet("font-weight: bold; font-size: 13px;")
-
-        self._bar = QProgressBar()
-        self._bar.setRange(0, 100)
-        self._bar.setValue(0)
-        self._bar.setFixedHeight(8)
-        self._bar.setTextVisible(False)
-
-        layout.addWidget(self._label)
-        layout.addWidget(self._value)
-        layout.addWidget(self._bar, 1)
-
-    def set_value(self, value: float, max_val: float = 100.0):
-        self._value.setText(f"{value:.1f}{self._unit}")
-        color = get_temperature_color(value) if self._unit == "°C" else "#7aa2f7"
-        self._value.setStyleSheet(f"font-weight: bold; font-size: 13px; color: {color};")
-        pct = min(100, (value / max_val * 100)) if max_val > 0 else 0
-        self._bar.setValue(int(pct))
-        self._bar.setStyleSheet(
-            f"QProgressBar::chunk {{ border-radius: 4px; background: {color}; }}"
-        )
-
-
-class NetworkSpeedWidget(QFrame):
-    """Upload/download speed display with arrows."""
-
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setProperty("class", "card")
-        self.setMinimumWidth(160)
-
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(14, 10, 14, 10)
-        layout.setSpacing(4)
-
-        up_row = QHBoxLayout()
-        up_label = QLabel("↑")
-        up_label.setStyleSheet("color: #9ece6a; font-size: 16px; font-weight: bold;")
-        self._up_value = QLabel("0 B/s")
-        self._up_value.setStyleSheet("font-size: 14px; font-weight: bold;")
-        up_row.addWidget(up_label)
-        up_row.addWidget(self._up_value)
-
-        down_row = QHBoxLayout()
-        down_label = QLabel("↓")
-        down_label.setStyleSheet("color: #7aa2f7; font-size: 16px; font-weight: bold;")
-        self._down_value = QLabel("0 B/s")
-        self._down_value.setStyleSheet("font-size: 14px; font-weight: bold;")
-        down_row.addWidget(down_label)
-        down_row.addWidget(self._down_value)
-
-        layout.addLayout(up_row)
-        layout.addLayout(down_row)
-
-    def set_speeds(self, up: float, down: float):
-        self._up_value.setText(f"{bytes_to_human(up)}/s")
-        self._down_value.setText(f"{bytes_to_human(down)}/s")
+        p.end()

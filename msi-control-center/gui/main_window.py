@@ -24,8 +24,8 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle(f"{APP_NAME} v{APP_VERSION}")
-        self.setMinimumSize(900, 650)
-        self.resize(1000, 700)
+        self.setMinimumSize(960, 700)
+        self.resize(1050, 750)
 
         self.setStyleSheet(DARK_THEME)
 
@@ -51,10 +51,10 @@ class MainWindow(QMainWindow):
         self.hardware_tab = HardwareTab(self._hardware)
         self.sensors_tab = SensorsTab()
 
-        self.tabs.addTab(self.overview_tab, "  Overview  ")
-        self.tabs.addTab(self.performance_tab, "  Performance  ")
-        self.tabs.addTab(self.hardware_tab, "  Hardware  ")
-        self.tabs.addTab(self.sensors_tab, "  Sensors  ")
+        self.tabs.addTab(self.overview_tab, "  OVERVIEW  ")
+        self.tabs.addTab(self.performance_tab, "  PERFORMANCE  ")
+        self.tabs.addTab(self.hardware_tab, "  HARDWARE  ")
+        self.tabs.addTab(self.sensors_tab, "  SENSORS  ")
 
         main_layout.addWidget(self.tabs)
 
