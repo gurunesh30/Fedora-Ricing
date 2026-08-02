@@ -3,7 +3,7 @@
 
 # Keep .gitignore itself
 !.gitignore
-
+#waybar configs 
 # Whitelist custom ricing config directories
 !hypr/
 !hypr/**
